@@ -1,2 +1,2 @@
-# SyntheticSkia
-Delphi components based on the Skia framework.
+# ZX Skia Controls
+Delphi FMX components based on the Skia framework.
