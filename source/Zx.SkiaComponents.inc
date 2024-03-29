@@ -1,0 +1,7 @@
+{$IF Defined(MSWINDOWS) OR Defined(OSX) OR Defined(LINUX)}
+  {$DEFINE DESKTOPPLATFORM}
+{$ENDIF}
+
+{$IF Defined(ANDROID) OR Defined(IOS)}
+  {$DEFINE MOBILEPLATFORM}
+{$ENDIF}
