@@ -354,6 +354,7 @@ begin
   FAutoHide := True;
   TabStop := False;
   FImageLink := TSynFMXGlyphImageLinkEx.Create(Self);
+  DrawCacheKind := TSkDrawCacheKind.Always;
 end;
 
 destructor TZxSvgGlyph.Destroy;
