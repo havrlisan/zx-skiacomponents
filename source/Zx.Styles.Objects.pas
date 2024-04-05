@@ -507,7 +507,11 @@ procedure TZxAnimatedImageActiveStyleObject.DoTriggered;
 begin
   inherited;
   if FAniLoop then
-    FAnimatedImage.Animation.Enabled := Active
+  begin
+    FAnimatedImage.Animation.Enabled := Active;
+    if not Active then
+      FAnimatedImage.Animation.Progress := 0;
+  end
   else
   begin
     FAnimatedImage.Animation.Inverse := ActiveAnimation.Inverse;
@@ -626,14 +630,18 @@ end;
 
 procedure TZxCustomButtonStyleObject.Triggered(Sender: TObject);
 begin
+  var
+  LNew := TZxButtonTriggerType.Normal;
   for var LTriggerType := Low(FTriggers) to High(FTriggers) do
+  begin
     if FTriggers[LTriggerType] = Sender then
-    begin
-      FPrevious := FCurrent;
-      FCurrent := LTriggerType;
-      DoTriggered(LTriggerType);
-      Break;
-    end;
+      LNew := LTriggerType
+    else
+      FTriggers[LTriggerType].StopAtCurrent;
+  end;
+  FPrevious := FCurrent;
+  FCurrent := LNew;
+  DoTriggered(FCurrent);
 end;
 
 procedure TZxCustomButtonStyleObject.DoTriggered(const ATriggerType: TZxButtonTriggerType);
