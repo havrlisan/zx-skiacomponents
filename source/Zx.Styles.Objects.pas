@@ -85,6 +85,7 @@ type
   TZxColorActiveStyleObject = class(TZxCustomActiveStyleObject)
   strict private
     FPaint: ISkPaint;
+    FColor: TAlphaColorF;
     FRadiusX: Single;
     FRadiusY: Single;
     function GetActiveAnimation: TZxColorAnimation;
@@ -94,9 +95,11 @@ type
     procedure SetSourceColor(const AValue: TAlphaColor);
     procedure SetRadiusX(const AValue: Single);
     procedure SetRadiusY(const AValue: Single);
-  strict protected
     procedure OnTriggerProcess(Sender: TObject; const AValue: TAlphaColor);
+  strict protected
     procedure UpdateColor(const AValue: TAlphaColor); inline;
+    property SkPaint: ISkPaint read FPaint;
+  strict protected
     function RadiusXStored: Boolean; virtual;
     function RadiusYStored: Boolean; virtual;
   strict protected
@@ -205,15 +208,17 @@ type
   strict private
     FTriggerColors: array [TZxButtonTriggerType] of TAlphaColor;
     FPaint: ISkPaint;
+    FColor: TAlphaColorF;
     FRadiusX: Single;
     FRadiusY: Single;
     function GetTriggerColor(const AIndex: TZxButtonTriggerType): TAlphaColor;
     procedure SetTriggerColor(const AIndex: TZxButtonTriggerType; const AValue: TAlphaColor);
     procedure SetRadiusX(const AValue: Single);
     procedure SetRadiusY(const AValue: Single);
-  strict private
     procedure OnTriggerProcess(Sender: TObject);
-    procedure UpdateColor(const AColor: TAlphaColor); inline;
+  strict protected
+    procedure UpdateColor(const AValue: TAlphaColor); inline;
+    property SkPaint: ISkPaint read FPaint;
   strict protected
     function RadiusXStored: Boolean; virtual;
     function RadiusYStored: Boolean; virtual;
@@ -355,7 +360,8 @@ begin
   ActiveAnimation.Duration := 0.1;
   ActiveAnimation.OnProcessValue := OnTriggerProcess;
   FPaint := TSkPaint.Create;
-  FPaint.Color := TAlphaColors.Null;
+  FPaint.AntiAlias := True;
+  UpdateColor(TAlphaColors.Null);
 end;
 
 destructor TZxColorActiveStyleObject.Destroy;
@@ -371,6 +377,7 @@ end;
 
 procedure TZxColorActiveStyleObject.UpdateColor(const AValue: TAlphaColor);
 begin
+  FColor := TAlphaColorF.Create(AValue);
   FPaint.Color := AValue;
   Redraw;
 end;
@@ -393,9 +400,7 @@ end;
 procedure TZxColorActiveStyleObject.Draw(const ACanvas: ISkCanvas; const ADest: TRectF; const AOpacity: Single);
 begin
   inherited;
-  if FPaint.Color = TAlphaColors.Null then
-    Exit;
-  FPaint.AlphaF := AOpacity;
+  FPaint.AlphaF := FColor.A * AOpacity;
   if (FRadiusX <> 0) or (FRadiusY <> 0) then
     ACanvas.DrawRoundRect(ADest, FRadiusX, FRadiusY, FPaint)
   else
@@ -673,7 +678,8 @@ begin
   inherited;
   Duration := 0.1;
   FPaint := TSkPaint.Create;
-  FPaint.Color := TAlphaColors.Null;
+  FPaint.AntiAlias := True;
+  UpdateColor(TAlphaColors.Null);
 end;
 
 function TZxColorButtonStyleObject.DoCreateAnimation: TZxAnimation;
@@ -687,18 +693,17 @@ begin
   UpdateColor(InterpolateColor(FTriggerColors[Previous], FTriggerColors[Current], TAnimation(Sender).NormalizedTime));
 end;
 
-procedure TZxColorButtonStyleObject.UpdateColor(const AColor: TAlphaColor);
+procedure TZxColorButtonStyleObject.UpdateColor(const AValue: TAlphaColor);
 begin
-  FPaint.Color := AColor;
+  FColor := TAlphaColorF.Create(AValue);
+  FPaint.Color := AValue;
   Redraw;
 end;
 
 procedure TZxColorButtonStyleObject.Draw(const ACanvas: ISkCanvas; const ADest: TRectF; const AOpacity: Single);
 begin
   inherited;
-  if FPaint.Color = TAlphaColors.Null then
-    Exit;
-  FPaint.AlphaF := AOpacity;
+  FPaint.AlphaF := FColor.A * AOpacity;
   if (FRadiusX <> 0) or (FRadiusY <> 0) then
     ACanvas.DrawRoundRect(ADest, FRadiusX, FRadiusY, FPaint)
   else
