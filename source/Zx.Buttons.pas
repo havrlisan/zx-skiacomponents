@@ -681,7 +681,8 @@ begin
     end;
     if FIcon <> nil then
       FIcon.Visible := not TControl(FGlyph).Visible;
-    // Repaint;
+    if not TryAutoResize then
+      Redraw;
   end;
 end;
 

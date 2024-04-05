@@ -33,6 +33,7 @@ type
     FName: String;
     procedure SetName(const Value: String);
   protected
+    procedure AssignTo(Dest: TPersistent); override;
     function GetDisplayName: string; override;
   published
     constructor Create(Collection: TCollection); override;
@@ -189,6 +190,17 @@ destructor TZxSvgBrushItem.Destroy;
 begin
   FSvgBrush.Free;
   inherited;
+end;
+
+procedure TZxSvgBrushItem.AssignTo(Dest: TPersistent);
+begin
+  if Dest is TZxSvgBrushItem then
+  begin
+    TZxSvgBrushItem(Dest).FName := FName;
+    TZxSvgBrushItem(Dest).FSvgBrush.Assign(FSvgBrush);
+  end
+  else
+    inherited;
 end;
 
 function TZxSvgBrushItem.GetDisplayName: string;

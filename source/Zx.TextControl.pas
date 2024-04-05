@@ -67,6 +67,7 @@ type
     procedure SetPrefixStyle(const Value: TPrefixStyle);
   protected
     procedure UpdateTextObject(const TextControl: TControl; const Str: string);
+    function TryAutoResize: Boolean;
     function HasFitSizeChanged: Boolean;
     procedure GetFitSize(var AWidth, AHeight: Single);
     { IAcceleratorKeyReceiver }
@@ -193,8 +194,7 @@ begin
     FIsChanging := True;
     try
       DoChanged;
-      if not IsUpdating and FAutoSize and HasFitSizeChanged then
-        SetSize(Width, Height);
+      TryAutoResize;
     finally
       FIsChanging := False;
     end;
@@ -223,9 +223,7 @@ begin
       UpdateTextObject(ResourceControl, TextStr)
     else
     begin
-      if not IsUpdating and FAutoSize and HasFitSizeChanged then
-        SetSize(Width, Height)
-      else
+      if not TryAutoResize then
         Redraw;
       UpdateEffects;
     end;
@@ -642,6 +640,13 @@ begin
   SetFocus;
 end;
 
+function TZxTextControl.TryAutoResize: Boolean;
+begin
+  Result := not IsUpdating and FAutoSize and HasFitSizeChanged;
+  if Result then
+    SetSize(Width, Height);
+end;
+
 procedure TZxTextControl.UpdateTextObject(const TextControl: TControl; const Str: string);
 var
   Caption: ICaption;
@@ -657,12 +662,11 @@ begin
     Caption.Text := Str;
   TextControl.UpdateEffects;
   UpdateEffects;
-  if not IsUpdating and FAutoSize and HasFitSizeChanged then
-    SetSize(Width, Height)
-  else if TextControl is TSkCustomControl then
-    TSkCustomControl(TextControl).Redraw
-  else
-    TextControl.Repaint;
+  if not TryAutoResize then
+    if TextControl is TSkCustomControl then
+      TSkCustomControl(TextControl).Redraw
+    else
+      TextControl.Repaint;
 end;
 
 end.
