@@ -1,3 +1,13 @@
+{************************************************************************}
+{                                                                        }
+{                           Zx-SkiaComponents                            }
+{                                                                        }
+{ Copyright (c) 2024 Zx-SkiaComponents Project.                          }
+{                                                                        }
+{ Use of this source code is governed by the MIT license that can be     }
+{ found in the LICENSE file.                                             }
+{                                                                        }
+{************************************************************************}
 unit Zx.Helpers;
 
 interface
