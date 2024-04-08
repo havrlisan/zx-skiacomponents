@@ -25,7 +25,8 @@ uses
   FMX.Types,
   FMX.Controls,
   FMX.ActnList,
-  FMX.Skia.Canvas;
+  FMX.Skia.Canvas,
+  Zx.Controls;
 
 type
   TZxSvgBrushList = class;
@@ -97,7 +98,7 @@ type
   end;
 
   [ComponentPlatformsAttribute(pidAllPlatforms)]
-  TZxSvgGlyph = class(TSkCustomControl, IGlyph)
+  TZxSvgGlyph = class(TZxCustomControl, IGlyph)
   public const
     DesignBorderColor = $A080D080;
   private
@@ -185,8 +186,8 @@ type
 implementation
 
 uses
-  FMX.Graphics,
-  System.Math;
+  System.Math,
+  FMX.Graphics;
 
 { TZxSvgBrushItem }
 

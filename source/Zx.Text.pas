@@ -24,14 +24,15 @@ uses
   FMX.ActnList,
   FMX.Graphics,
   FMX.Controls,
+  FMX.Forms,
   FMX.Skia.Canvas,
   Zx.TextControl,
-  FMX.Forms;
+  Zx.Controls;
 
 type
 
   [ComponentPlatformsAttribute(pidAllPlatforms)]
-  TZxText = class(TSkStyledControl, ISkTextSettings, IObjectState, ICaption, IZxPrefixStyle)
+  TZxText = class(TZxStyledControl, ISkTextSettings, IObjectState, ICaption, IZxPrefixStyle)
     // protected type
     // TAcceleratorInfo = class
     // private
@@ -194,10 +195,10 @@ type
 implementation
 
 uses
-  FMX.AcceleratorKey,
-  FMX.Platform,
   System.Math,
   System.Math.Vectors,
+  FMX.AcceleratorKey,
+  FMX.Platform,
   FMX.BehaviorManager;
 
 function CeilFloat(const X: Single): Single;

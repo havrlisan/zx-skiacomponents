@@ -39,7 +39,8 @@ uses
   FMX.Controls.Model,
   FMX.ImgList,
   FMX.AcceleratorKey,
-  FMX.Skia;
+  FMX.Skia,
+  Zx.Controls;
 
 type
   IZxPrefixStyle = interface
@@ -49,7 +50,7 @@ type
     property PrefixStyle: TPrefixStyle read GetPrefixStyle write SetPrefixStyle;
   end;
 
-  TZxTextControl = class(TSkStyledControl, ISkTextSettings, ICaption, IAcceleratorKeyReceiver, IZxPrefixStyle)
+  TZxTextControl = class(TZxStyledControl, ISkTextSettings, ICaption, IAcceleratorKeyReceiver, IZxPrefixStyle)
   public const
     DefaultPrefixStyle = TPrefixStyle.HidePrefix;
   private
@@ -116,13 +117,6 @@ type
     procedure SetAlign(const AValue: TAlignLayout); override;
     function DoSetSize(const ASize: TControlSize; const ANewPlatformDefault: Boolean; ANewWidth, ANewHeight: Single;
       var ALastWidth, ALastHeight: Single): Boolean; override;
-  protected
-    { fix for mobile platforms; prevents Click event when user pans and releases finger on the control }
-{$IFDEF MOBILEPLATFORM}
-    FManualClick: Boolean;
-{$ENDIF}
-    procedure Click; override;
-    procedure Tap(const Point: TPointF); override;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -147,9 +141,9 @@ uses
   System.Math.Vectors,
   FMX.Platform,
   FMX.BehaviorManager,
+  FMX.Styles,
   Zx.Text,
-  Zx.Helpers,
-  FMX.Styles;
+  Zx.Helpers;
 
 { TZxTextControl }
 
@@ -609,23 +603,6 @@ end;
 function TZxTextControl.StyledSettingsStored: Boolean;
 begin
   Result := StyledSettings <> DefaultStyledSettings;
-end;
-
-procedure TZxTextControl.Click;
-begin
-{$IFDEF MOBILEPLATFORM}
-  if FManualClick then
-{$ENDIF}
-    inherited;
-end;
-
-procedure TZxTextControl.Tap(const Point: TPointF);
-begin
-{$IFDEF MOBILEPLATFORM}
-  FManualClick := True;
-  Click;
-  FManualClick := False;
-{$ENDIF}
 end;
 
 procedure TZxTextControl.TextSettingsChanged(Sender: TObject);

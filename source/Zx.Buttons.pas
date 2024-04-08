@@ -29,9 +29,9 @@ uses
   FMX.Types,
   FMX.ActnList,
   FMX.ImgList,
+  FMX.Skia,
   Zx.TextControl,
-  Zx.Styles,
-  FMX.Skia;
+  Zx.Styles;
 
 type
   TZxCustomButton = class(TZxTextControl, IGlyph)
@@ -68,7 +68,7 @@ type
     procedure ApplyTriggers; virtual;
     procedure SetIsPressed(const Value: Boolean); virtual;
     procedure SetStaysPressed(const Value: Boolean); virtual;
-    procedure Click; override;
+    procedure DoClick; override;
     procedure DblClick; override;
     procedure ApplyStyle; override;
     procedure FreeStyle; override;
@@ -537,7 +537,7 @@ begin
   Click;
 end;
 
-procedure TZxCustomButton.Click;
+procedure TZxCustomButton.DoClick;
 var
   O: TComponent;
 begin

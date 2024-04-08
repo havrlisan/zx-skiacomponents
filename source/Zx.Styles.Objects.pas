@@ -24,7 +24,8 @@ uses
   FMX.Ani,
   FMX.Types,
   FMX.Objects,
-  Zx.Ani;
+  Zx.Ani,
+  Zx.Controls;
 
 {$SCOPEDENUMS ON}
 
@@ -38,7 +39,7 @@ type
     function ToProperty(const AValue: Boolean): String; overload;
   end;
 
-  TZxCustomStyleObject = class abstract(TSkCustomControl)
+  TZxCustomStyleObject = class abstract(TZxCustomControl)
   strict protected
     function DoGetUpdateRect: TRectF; override;
   public

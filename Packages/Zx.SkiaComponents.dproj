@@ -139,6 +139,7 @@
             <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
+        <DCCReference Include="..\source\Zx.Controls.pas"/>
         <RcItem Include="..\Resources\Images\TZxText.bmp">
             <ResourceType>BITMAP</ResourceType>
             <ResourceId>TZxText</ResourceId>

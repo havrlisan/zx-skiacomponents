@@ -44,6 +44,7 @@ contains
   Zx.Buttons in '..\source\Zx.Buttons.pas',
   Zx.Styles.Objects in '..\source\Zx.Styles.Objects.pas',
   Zx.StyleManager in '..\source\Zx.StyleManager.pas',
-  Zx.Styles in '..\source\Zx.Styles.pas' {ZxStyles: TDataModule};
+  Zx.Styles in '..\source\Zx.Styles.pas' {ZxStyles: TDataModule},
+  Zx.Controls in '..\source\Zx.Controls.pas';
 
 end.
