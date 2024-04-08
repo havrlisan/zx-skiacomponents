@@ -60,7 +60,6 @@ type
     function GetImages: TBaseImageList; inline;
     procedure SetImages(const Value: TBaseImageList);
   protected
-    function GetFitWidth: Single; override;
   protected
     procedure ActionChange(Sender: TBasicAction; CheckDefaults: Boolean); override;
     function IsPressedStored: Boolean; virtual;
@@ -360,18 +359,6 @@ begin
       DefaultTouchTargetExpansion)
   else
     Result := inherited;
-end;
-
-function TZxCustomButton.GetFitWidth: Single;
-begin
-  Result := inherited;
-  if Assigned(FGlyph) and (FGlyph is TControl) then
-  begin
-    var
-    LGlyph := TControl(FGlyph);
-    if LGlyph.Visible then
-      Result := Result + LGlyph.Margins.Left + LGlyph.Width + LGlyph.Margins.Right;
-  end;
 end;
 
 procedure TZxCustomButton.ActionChange(Sender: TBasicAction; CheckDefaults: Boolean);

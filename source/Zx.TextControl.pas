@@ -453,22 +453,59 @@ begin
 end;
 
 function TZxTextControl.GetFitHeight: Single;
+
+  function GetControlHeight(const AControl: TControl; const AUseTextFitBounds: Boolean): Single;
+  begin
+    Result := 0;
+    if AControl = nil then
+      Exit;
+    for var LControl in AControl.Controls do
+      if LControl.Visible then
+        if AUseTextFitBounds and (LControl is TSkLabel) then
+          Result := Result + LControl.Margins.Top + TSkLabel(LControl).FitBounds.Height + LControl.Margins.Bottom
+        else if AUseTextFitBounds and (LControl is TZxText) then
+          Result := Result + LControl.Margins.Top + TZxText(LControl).ParagraphBounds.Height + LControl.Margins.Bottom
+        else if not(LControl.Align in [TAlignLayout.Client, TAlignLayout.Contents, TAlignLayout.Left, TAlignLayout.MostLeft,
+          TAlignLayout.Right, TAlignLayout.MostRight, TAlignLayout.FitLeft, TAlignLayout.FitRight, TAlignLayout.HorzCenter,
+          TAlignLayout.Vertical]) then
+          Result := Result + LControl.Margins.Top + LControl.Height + LControl.Margins.Bottom;
+    if Result <> 0 then
+      Result := Result + AControl.Padding.Top + AControl.Padding.Bottom;
+  end;
+
 begin
-  if FTextObject is TSkLabel then
-    Result := FTextObject.Margins.Top + TSkLabel(FTextObject).FitBounds.Height + FTextObject.Margins.Bottom
-  else if FTextObject is TZxText then
-    Result := FTextObject.Margins.Top + TZxText(FTextObject).ParagraphBounds.Height + FTextObject.Margins.Bottom
-  else
+  Result := GetControlHeight(Self, False) + GetControlHeight(ResourceControl, True);
+  if Result = 0 then
     Result := Height;
 end;
 
 function TZxTextControl.GetFitWidth: Single;
+
+  function GetControlWidth(const AControl: TControl; const AUseTextFitBounds: Boolean): Single;
+  begin
+    Result := 0;
+    if AControl = nil then
+      Exit;
+    var
+      _LTextWidth: Single := 0;
+    if FTextObject is TZxText then
+      _LTextWidth := TZxText(FTextObject).ParagraphBounds.Width;
+    for var LControl in AControl.Controls do
+      if LControl.Visible then
+        if AUseTextFitBounds and (LControl is TSkLabel) then
+          Result := Result + LControl.Margins.Left + TSkLabel(LControl).FitBounds.Width + LControl.Margins.Right
+        else if AUseTextFitBounds and (LControl is TZxText) then
+          Result := Result + LControl.Margins.Left + TZxText(LControl).ParagraphBounds.Width + LControl.Margins.Right
+        else if not(LControl.Align in [TAlignLayout.Client, TAlignLayout.Contents, TAlignLayout.Top, TAlignLayout.MostTop,
+          TAlignLayout.Bottom, TAlignLayout.MostBottom, TAlignLayout.VertCenter, TAlignLayout.Horizontal]) then
+          Result := Result + LControl.Margins.Left + LControl.Width + LControl.Margins.Right;
+    if Result <> 0 then
+      Result := Result + AControl.Padding.Left + AControl.Padding.Right;
+  end;
+
 begin
-  if FTextObject is TSkLabel then
-    Result := FTextObject.Margins.Left + TSkLabel(FTextObject).FitBounds.Width + FTextObject.Margins.Right
-  else if FTextObject is TZxText then
-    Result := FTextObject.Margins.Left + TZxText(FTextObject).ParagraphBounds.Width + FTextObject.Margins.Right
-  else
+  Result := GetControlWidth(Self, False) + GetControlWidth(ResourceControl, True);
+  if Result = 0 then
     Result := Width;
 end;
 

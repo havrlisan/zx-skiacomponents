@@ -36,7 +36,7 @@ uses
   FMX.ActnList,
   Zx.TextControl,
   Zx.Text,
-  FMX.Objects;
+  FMX.Objects, Zx.Controls;
 
 type
   TfrmFullDemo = class(TForm)
@@ -67,8 +67,9 @@ type
     ZxButton1: TZxButton;
     procedure btnGlyphClick(Sender: TObject);
     procedure btnMultilineClick(Sender: TObject);
-  private
-    { Private declarations }
+  private const
+    CMultilineText1 = 'A button can also be multiline!';
+    CMultilineText2 = 'Autosize';
   public
     { Public declarations }
   end;
@@ -93,12 +94,12 @@ begin
   if btnMultiline.ImageIndex = 0 then
   begin
     btnMultiline.ImageIndex := 3;
-    btnMultiline.Text := 'A button can also be multiline!';
+    btnMultiline.Text := CMultilineText1;
   end
   else
   begin
     btnMultiline.ImageIndex := 0;
-    btnMultiline.Text := 'Autosize FTW';
+    btnMultiline.Text := CMultilineText2;
   end;
 end;
 
