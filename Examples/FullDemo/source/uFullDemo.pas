@@ -23,8 +23,13 @@ uses
   FMX.Forms,
   FMX.Graphics,
   FMX.Dialogs,
-  System.Skia,
+{$IFDEF CompilerVersion < 36}
+  Skia,
+  Skia.FMX,
+{$ELSE}
   FMX.Skia,
+  System.Skia,
+{$ENDIF}
   Zx.SvgBrushList,
   System.ImageList,
   FMX.Edit,

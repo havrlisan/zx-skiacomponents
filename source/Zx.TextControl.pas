@@ -39,7 +39,11 @@ uses
   FMX.Controls.Model,
   FMX.ImgList,
   FMX.AcceleratorKey,
+{$IFDEF CompilerVersion < 36}
+  Skia.FMX,
+{$ELSE}
   FMX.Skia,
+{$ENDIF}
   Zx.Controls;
 
 type
@@ -486,10 +490,6 @@ function TZxTextControl.GetFitWidth: Single;
     Result := 0;
     if AControl = nil then
       Exit;
-    var
-      _LTextWidth: Single := 0;
-    if FTextObject is TZxText then
-      _LTextWidth := TZxText(FTextObject).ParagraphBounds.Width;
     for var LControl in AControl.Controls do
       if LControl.Visible then
         if AUseTextFitBounds and (LControl is TSkLabel) then

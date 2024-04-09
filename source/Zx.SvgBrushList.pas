@@ -1,13 +1,13 @@
-{************************************************************************}
-{                                                                        }
-{                           Zx-SkiaComponents                            }
-{                                                                        }
-{ Copyright (c) 2024 Zx-SkiaComponents Project.                          }
-{                                                                        }
-{ Use of this source code is governed by the MIT license that can be     }
-{ found in the LICENSE file.                                             }
-{                                                                        }
-{************************************************************************}
+{ ************************************************************************ }
+{ }
+{ Zx-SkiaComponents }
+{ }
+{ Copyright (c) 2024 Zx-SkiaComponents Project. }
+{ }
+{ Use of this source code is governed by the MIT license that can be }
+{ found in the LICENSE file. }
+{ }
+{ ************************************************************************ }
 unit Zx.SvgBrushList;
 
 interface
@@ -18,14 +18,18 @@ uses
   System.ImageList,
   System.UITypes,
   System.Types,
-  System.Skia,
+{$IFDEF CompilerVersion < 36}
+  Skia,
+  Skia.FMX,
+{$ELSE}
   FMX.Skia,
+  System.Skia,
+{$ENDIF}
   FMX.ImgList,
   FMX.Utils,
   FMX.Types,
   FMX.Controls,
   FMX.ActnList,
-  FMX.Skia.Canvas,
   Zx.Controls;
 
 type
@@ -71,7 +75,7 @@ type
     property Items[AIndex: Integer]: TZxSvgBrushItem read GetItem write SetItem; default;
   end;
 
-  [ComponentPlatformsAttribute(pidAllPlatforms)]
+  [ComponentPlatformsAttribute(SkSupportedPlatformsMask)]
   TZxSvgBrushList = class(TBaseImageList)
   private
     FCollection: TZxSvgBrushCollection;
@@ -97,7 +101,7 @@ type
     property OnChange: TNotifyEvent read FOnChange write FOnChange;
   end;
 
-  [ComponentPlatformsAttribute(pidAllPlatforms)]
+  [ComponentPlatformsAttribute(SkSupportedPlatformsMask)]
   TZxSvgGlyph = class(TZxCustomControl, IGlyph)
   public const
     DesignBorderColor = $A080D080;

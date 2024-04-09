@@ -1,13 +1,13 @@
-{************************************************************************}
-{                                                                        }
-{                           Zx-SkiaComponents                            }
-{                                                                        }
-{ Copyright (c) 2024 Zx-SkiaComponents Project.                          }
-{                                                                        }
-{ Use of this source code is governed by the MIT license that can be     }
-{ found in the LICENSE file.                                             }
-{                                                                        }
-{************************************************************************}
+{ ************************************************************************ }
+{ }
+{ Zx-SkiaComponents }
+{ }
+{ Copyright (c) 2024 Zx-SkiaComponents Project. }
+{ }
+{ Use of this source code is governed by the MIT license that can be }
+{ found in the LICENSE file. }
+{ }
+{ ************************************************************************ }
 unit Zx.Text;
 
 interface
@@ -18,20 +18,24 @@ uses
   System.Classes,
   System.Rtti,
   System.SysUtils,
-  System.Skia,
+{$IFDEF CompilerVersion < 36}
+  Skia,
+  Skia.FMX,
+{$ELSE}
   FMX.Skia,
+  System.Skia,
+{$ENDIF}
   FMX.Types,
   FMX.ActnList,
   FMX.Graphics,
   FMX.Controls,
   FMX.Forms,
-  FMX.Skia.Canvas,
   Zx.TextControl,
   Zx.Controls;
 
 type
 
-  [ComponentPlatformsAttribute(pidAllPlatforms)]
+  [ComponentPlatformsAttribute(SkSupportedPlatformsMask)]
   TZxText = class(TZxStyledControl, ISkTextSettings, IObjectState, ICaption, IZxPrefixStyle)
     // protected type
     // TAcceleratorInfo = class

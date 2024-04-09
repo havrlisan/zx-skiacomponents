@@ -1,13 +1,13 @@
-{************************************************************************}
-{                                                                        }
-{                           Zx-SkiaComponents                            }
-{                                                                        }
-{ Copyright (c) 2024 Zx-SkiaComponents Project.                          }
-{                                                                        }
-{ Use of this source code is governed by the MIT license that can be     }
-{ found in the LICENSE file.                                             }
-{                                                                        }
-{************************************************************************}
+{ ************************************************************************ }
+{ }
+{ Zx-SkiaComponents }
+{ }
+{ Copyright (c) 2024 Zx-SkiaComponents Project. }
+{ }
+{ Use of this source code is governed by the MIT license that can be }
+{ found in the LICENSE file. }
+{ }
+{ ************************************************************************ }
 unit Zx.Buttons;
 
 {$IF CompilerVersion > 36}
@@ -29,7 +29,11 @@ uses
   FMX.Types,
   FMX.ActnList,
   FMX.ImgList,
+{$IFDEF CompilerVersion < 36}
+  Skia.FMX,
+{$ELSE}
   FMX.Skia,
+{$ENDIF}
   Zx.TextControl,
   Zx.Styles;
 
@@ -111,7 +115,7 @@ type
     property ImageIndex: TImageIndex read GetImageIndex write SetImageIndex stored ImageIndexStored;
   end;
 
-  [ComponentPlatformsAttribute(pidAllPlatforms)]
+  [ComponentPlatformsAttribute(SkSupportedPlatformsMask)]
   TZxButton = class(TZxCustomButton)
   private
     FDefault: Boolean;
@@ -199,7 +203,7 @@ type
     property OnResized;
   end;
 
-  [ComponentPlatformsAttribute(pidAllPlatforms)]
+  [ComponentPlatformsAttribute(SkSupportedPlatformsMask)]
   TZxSpeedButton = class(TZxCustomButton, IGroupName, IIsChecked)
   private
     FGroupName: string;

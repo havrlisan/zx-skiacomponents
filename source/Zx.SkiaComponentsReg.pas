@@ -21,8 +21,13 @@ uses
   System.SysUtils,
   System.UITypes,
   FMX.Forms,
+{$IFDEF CompilerVersion < 36}
+  Skia.FMX,
+  Skia.FMX.Designtime.Editor.AnimatedImage,
+{$ELSE}
   FMX.Skia,
   FMX.Skia.Designtime.Editor.AnimatedImage,
+{$ENDIF}
   DesignEditors,
   DesignIntf,
   Zx.SvgBrushList,

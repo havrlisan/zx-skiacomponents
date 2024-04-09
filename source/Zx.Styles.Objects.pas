@@ -17,8 +17,13 @@ uses
   System.Classes,
   System.UITypes,
   System.SysUtils,
-  System.Skia,
+{$IFDEF CompilerVersion < 36}
+  Skia,
+  Skia.FMX,
+{$ELSE}
   FMX.Skia,
+  System.Skia,
+{$ENDIF}
   FMX.Controls,
   FMX.Graphics,
   FMX.Ani,
@@ -92,7 +97,7 @@ type
   /// <summary>
   /// Simple color style object that animates the color transition.
   /// </summary>
-  [ComponentPlatformsAttribute(pidAllPlatforms)]
+  [ComponentPlatformsAttribute(SkSupportedPlatformsMask)]
   TZxColorActiveStyleObject = class(TZxCustomActiveStyleObject)
   strict private
     FPaint: ISkPaint;
@@ -138,7 +143,7 @@ type
   /// 2) if True, trigger starts animated image in loop. Inverse trigger stops
   /// animated image.
   /// </summary>
-  [ComponentPlatformsAttribute(pidAllPlatforms)]
+  [ComponentPlatformsAttribute(SkSupportedPlatformsMask)]
   TZxAnimatedImageActiveStyleObject = class(TZxCustomActiveStyleObject)
   strict private
     FAnimatedImage: TSkAnimatedImage;
@@ -214,7 +219,7 @@ type
     property Duration: Single read FDuration write SetDuration stored DurationStored;
   end;
 
-  [ComponentPlatformsAttribute(pidAllPlatforms)]
+  [ComponentPlatformsAttribute(SkSupportedPlatformsMask)]
   TZxColorButtonStyleObject = class(TZxCustomButtonStyleObject)
   strict private
     FTriggerColors: array [TZxButtonTriggerType] of TAlphaColor;
