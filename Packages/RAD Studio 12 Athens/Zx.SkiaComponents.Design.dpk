@@ -35,6 +35,6 @@ requires
   Skia.Package.FMX.Designtime;
 
 contains
-  Zx.SkiaComponentsReg in '..\source\Zx.SkiaComponentsReg.pas';
+  Zx.SkiaComponentsReg in '..\..\source\Zx.SkiaComponentsReg.pas';
 
 end.

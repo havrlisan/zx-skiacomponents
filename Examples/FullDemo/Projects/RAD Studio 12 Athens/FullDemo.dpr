@@ -3,12 +3,12 @@ program FullDemo;
 uses
   System.StartUpCopy,
   FMX.Forms,
-{$IFDEF CompilerVersion < 36}
+  {$IFDEF CompilerVersion < 36}
   Skia.FMX,
-{$ELSE}
+  {$ELSE}
   FMX.Skia,
-{$ENDIF}
-  uFullDemo in 'source\uFullDemo.pas' {frmFullDemo};
+  {$ENDIF }
+  uFullDemo in '..\..\source\uFullDemo.pas' {frmFullDemo};
 
 {$R *.res}
 

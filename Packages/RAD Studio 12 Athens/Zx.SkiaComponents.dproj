@@ -126,53 +126,53 @@
         <DCCReference Include="Skia.Package.RTL.dcp"/>
         <DCCReference Include="fmx.dcp"/>
         <DCCReference Include="Skia.Package.FMX.dcp"/>
-        <DCCReference Include="..\source\Zx.Helpers.pas"/>
-        <DCCReference Include="..\source\Zx.Ani.pas"/>
-        <DCCReference Include="..\source\Zx.SvgBrushList.pas"/>
-        <DCCReference Include="..\source\Zx.TextControl.pas"/>
-        <DCCReference Include="..\source\Zx.Text.pas"/>
-        <DCCReference Include="..\source\Zx.Buttons.pas"/>
-        <DCCReference Include="..\source\Zx.Styles.Objects.pas"/>
-        <DCCReference Include="..\source\Zx.StyleManager.pas"/>
-        <DCCReference Include="..\source\Zx.Styles.pas">
+        <DCCReference Include="..\..\source\Zx.Helpers.pas"/>
+        <DCCReference Include="..\..\source\Zx.Ani.pas"/>
+        <DCCReference Include="..\..\source\Zx.SvgBrushList.pas"/>
+        <DCCReference Include="..\..\source\Zx.TextControl.pas"/>
+        <DCCReference Include="..\..\source\Zx.Text.pas"/>
+        <DCCReference Include="..\..\source\Zx.Buttons.pas"/>
+        <DCCReference Include="..\..\source\Zx.Styles.Objects.pas"/>
+        <DCCReference Include="..\..\source\Zx.StyleManager.pas"/>
+        <DCCReference Include="..\..\source\Zx.Styles.pas">
             <Form>ZxStyles</Form>
             <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
-        <DCCReference Include="..\source\Zx.Controls.pas"/>
-        <RcItem Include="..\Resources\Images\TZxText.bmp">
+        <DCCReference Include="..\..\source\Zx.Controls.pas"/>
+        <RcItem Include="..\..\Resources\Images\TZxText.bmp">
             <ResourceType>BITMAP</ResourceType>
             <ResourceId>TZxText</ResourceId>
         </RcItem>
-        <RcItem Include="..\Resources\Images\TZxSvgBrushList.bmp">
+        <RcItem Include="..\..\Resources\Images\TZxSvgBrushList.bmp">
             <ResourceType>BITMAP</ResourceType>
             <ResourceId>TZxSvgBrushList</ResourceId>
         </RcItem>
-        <RcItem Include="..\Resources\Images\TZxSvgGlyph.bmp">
+        <RcItem Include="..\..\Resources\Images\TZxSvgGlyph.bmp">
             <ResourceType>BITMAP</ResourceType>
             <ResourceId>TZxSvgGlyph</ResourceId>
         </RcItem>
-        <RcItem Include="..\Resources\Images\TZxButton.bmp">
+        <RcItem Include="..\..\Resources\Images\TZxButton.bmp">
             <ResourceType>BITMAP</ResourceType>
             <ResourceId>TZxButton</ResourceId>
         </RcItem>
-        <RcItem Include="..\Resources\Images\TZxSpeedButton.bmp">
+        <RcItem Include="..\..\Resources\Images\TZxSpeedButton.bmp">
             <ResourceType>BITMAP</ResourceType>
             <ResourceId>TZxSpeedButton</ResourceId>
         </RcItem>
-        <RcItem Include="..\Resources\Images\TZxAnimatedImageActiveStyleObject.bmp">
+        <RcItem Include="..\..\Resources\Images\TZxAnimatedImageActiveStyleObject.bmp">
             <ResourceType>BITMAP</ResourceType>
             <ResourceId>TZxAnimatedImageActiveStyleObject</ResourceId>
         </RcItem>
-        <RcItem Include="..\Resources\Images\TZxColorActiveStyleObject.bmp">
+        <RcItem Include="..\..\Resources\Images\TZxColorActiveStyleObject.bmp">
             <ResourceType>BITMAP</ResourceType>
             <ResourceId>TZxColorActiveStyleObject</ResourceId>
         </RcItem>
-        <RcItem Include="..\Resources\Images\TZxColorButtonStyleObject.bmp">
+        <RcItem Include="..\..\Resources\Images\TZxColorButtonStyleObject.bmp">
             <ResourceType>BITMAP</ResourceType>
             <ResourceId>TZxColorButtonStyleObject</ResourceId>
         </RcItem>
-        <RcItem Include="..\Resources\Images\TZxCustomStyleObject.bmp">
+        <RcItem Include="..\..\Resources\Images\TZxCustomStyleObject.bmp">
             <ResourceType>BITMAP</ResourceType>
             <ResourceId>TZxCustomStyleObject</ResourceId>
         </RcItem>
