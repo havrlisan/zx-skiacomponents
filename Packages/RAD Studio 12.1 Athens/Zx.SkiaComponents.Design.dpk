@@ -31,10 +31,12 @@ package Zx.SkiaComponents.Design;
 requires
   rtl,
   Zx.SkiaComponents,
-  designide,
-  Skia.Package.FMX.Designtime;
+  Skia.Package.FMX.Designtime,
+  dclfmxstd,
+  fmx;
 
 contains
-  Zx.SkiaComponentsReg in '..\..\source\Zx.SkiaComponentsReg.pas';
+  Zx.Designtime in '..\..\source\Zx.Designtime.pas',
+  Zx.Designtime.SvgBrushList in '..\..\source\Zx.Designtime.SvgBrushList.pas' {ZxSvgBrushListEditorForm: TFrame};
 
 end.

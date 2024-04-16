@@ -223,7 +223,7 @@ begin
     else
       TextStr := Text;
 
-    TextStr := DoFilterControlText(Text);
+    TextStr := DoFilterControlText(TextStr);
 
     if FTextObject <> nil then
       UpdateTextObject(FTextObject, TextStr)

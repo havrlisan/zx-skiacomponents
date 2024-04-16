@@ -1,13 +1,13 @@
-{ ************************************************************************ }
-{ }
-{ Zx-SkiaComponents }
-{ }
-{ Copyright (c) 2024 Zx-SkiaComponents Project. }
-{ }
-{ Use of this source code is governed by the MIT license that can be }
-{ found in the LICENSE file. }
-{ }
-{ ************************************************************************ }
+{************************************************************************}
+{                                                                        }
+{                           Zx-SkiaComponents                            }
+{                                                                        }
+{ Copyright (c) 2024 Zx-SkiaComponents Project.                          }
+{                                                                        }
+{ Use of this source code is governed by the MIT license that can be     }
+{ found in the LICENSE file.                                             }
+{                                                                        }
+{************************************************************************}
 unit Zx.SvgBrushList;
 
 interface
@@ -35,7 +35,7 @@ uses
 type
   TZxSvgBrushList = class;
 
-  TSynFMXSvgBrushItemClass = class of TZxSvgBrushItem;
+  TZxSvgBrushItemClass = class of TZxSvgBrushItem;
 
   TZxSvgBrushItem = class(TCollectionItem)
   public const
@@ -58,6 +58,14 @@ type
   end;
 
   TZxSvgBrushCollection = class(TOwnedCollection)
+  private type
+    TZxSvgBrushCollectionEnumerator = class(TCollectionEnumerator)
+    public
+      function GetCurrent: TZxSvgBrushItem; inline;
+      function MoveNext: Boolean; inline;
+      property Current: TZxSvgBrushItem read GetCurrent;
+    end;
+
   strict private[weak]
     FOwner: TZxSvgBrushList;
     function GetItem(AIndex: Integer): TZxSvgBrushItem;
@@ -68,7 +76,9 @@ type
   protected
     procedure Update(AItem: TCollectionItem); override;
   public
-    constructor Create(AOwner: TPersistent; AItemClass: TSynFMXSvgBrushItemClass);
+    constructor Create(AOwner: TPersistent; AItemClass: TZxSvgBrushItemClass);
+    function GetEnumerator: TZxSvgBrushCollectionEnumerator; inline;
+    function Add: TZxSvgBrushItem; reintroduce; overload;
     function Add(const ABrush: TSkSvgBrush): TZxSvgBrushItem; overload;
     function Insert(AIndex: Integer): TZxSvgBrushItem;
     property ItemByName[const AName: string]: TZxSvgBrushItem read GetItemByName;
@@ -81,7 +91,6 @@ type
     FCollection: TZxSvgBrushCollection;
     FOnChange: TNotifyEvent;
     procedure SetCollection(const Value: TZxSvgBrushCollection);
-  private
   protected
     /// <summary> The method should perform several actions to reflect changes in the image list. Never call this
     /// method yourself, but you can to use calling <b>Change</b></summary>
@@ -91,6 +100,7 @@ type
   public
     constructor Create(Owner: TComponent); override;
     destructor Destroy; override;
+    procedure Assign(Source: TPersistent); override;
     /// <summary> Returns <c>True</c> if the <b>Index</b> element in the <b>Source</b> collection contains some
     /// graphical data that can be used to create an image </summary>
     function SvgBrushExists(const Index: Integer): Boolean;
@@ -235,19 +245,41 @@ begin
   FSvgBrush.Assign(Value);
 end;
 
+{ TZxSvgBrushCollection.TZxSvgBrushCollectionEnumerator }
+
+function TZxSvgBrushCollection.TZxSvgBrushCollectionEnumerator.GetCurrent: TZxSvgBrushItem;
+begin
+  Result := TZxSvgBrushItem(inherited GetCurrent);
+end;
+
+function TZxSvgBrushCollection.TZxSvgBrushCollectionEnumerator.MoveNext: Boolean;
+begin
+  Result := inherited MoveNext;
+end;
+
 { TZxSvgBrushCollection }
 
-constructor TZxSvgBrushCollection.Create(AOwner: TPersistent; AItemClass: TSynFMXSvgBrushItemClass);
+constructor TZxSvgBrushCollection.Create(AOwner: TPersistent; AItemClass: TZxSvgBrushItemClass);
 begin
   ValidateInheritance(AOwner, TZxSvgBrushList, False);
   inherited Create(AOwner, AItemClass);
   FOwner := TZxSvgBrushList(AOwner);
 end;
 
+function TZxSvgBrushCollection.Add: TZxSvgBrushItem;
+begin
+  Result := inherited Add as TZxSvgBrushItem;
+end;
+
 function TZxSvgBrushCollection.Add(const ABrush: TSkSvgBrush): TZxSvgBrushItem;
 begin
   Result := inherited Add as TZxSvgBrushItem;
   Result.SvgBrush := ABrush;
+end;
+
+function TZxSvgBrushCollection.GetEnumerator: TZxSvgBrushCollectionEnumerator;
+begin
+  Result := TZxSvgBrushCollectionEnumerator.Create(Self);
 end;
 
 function TZxSvgBrushCollection.GetItem(AIndex: Integer): TZxSvgBrushItem;
@@ -295,6 +327,14 @@ begin
 end;
 
 { TZxSvgBrushList }
+
+procedure TZxSvgBrushList.Assign(Source: TPersistent);
+begin
+  if Source is TZxSvgBrushList then
+    FCollection.Assign(TZxSvgBrushList(Source).SvgBrushList)
+  else
+    inherited;
+end;
 
 constructor TZxSvgBrushList.Create(Owner: TComponent);
 begin

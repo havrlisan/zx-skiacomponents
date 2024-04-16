@@ -8,7 +8,7 @@
 { found in the LICENSE file.                                             }
 {                                                                        }
 {************************************************************************}
-unit Zx.SkiaComponentsReg;
+unit Zx.Designtime;
 
 interface
 
@@ -21,6 +21,7 @@ uses
   System.SysUtils,
   System.UITypes,
   FMX.Forms,
+  FmxImageListEditors,
 {$IFDEF CompilerVersion < 36}
   Skia.FMX,
   Skia.FMX.Designtime.Editor.AnimatedImage,
@@ -33,7 +34,8 @@ uses
   Zx.SvgBrushList,
   Zx.Text,
   Zx.Buttons,
-  Zx.Styles.Objects;
+  Zx.Styles.Objects,
+  Zx.Designtime.SvgBrushList;
 
 type
   { copied from FMX.Skia.Designtime - TSkAnimatedImageSourcePropertyEditor }
@@ -49,6 +51,14 @@ type
     function GetAttributes: TPropertyAttributes; override;
     function GetValue: string; override;
     class function TryEdit(var AData: TBytes): Boolean; static;
+  end;
+
+  { TZxSvgBrushListComponentEditor }
+
+  TZxSvgBrushListComponentEditor = class(TDefaultEditor)
+  public
+    procedure Edit; override;
+    class function TryEdit(const ABrushList: TZxSvgBrushList): Boolean; static;
   end;
 
   { TZxAnimatedImageSourcePropertyEditor }
@@ -97,10 +107,31 @@ begin
   end;
 end;
 
+{ TZxSvgBrushListComponentEditor }
+
+procedure TZxSvgBrushListComponentEditor.Edit;
+begin
+  if TryEdit(TZxSvgBrushList(Component)) then
+    if Designer <> nil then
+      Designer.Modified;
+end;
+
+class function TZxSvgBrushListComponentEditor.TryEdit(const ABrushList: TZxSvgBrushList): Boolean;
+begin
+  var
+  LSvgBrushListEditorForm := TZxSvgBrushListEditorForm.Create(Application);
+  try
+    Result := LSvgBrushListEditorForm.ShowModal(ABrushList) = mrOk;
+  finally
+    LSvgBrushListEditorForm.Free;
+  end;
+end;
+
 procedure Register;
 begin
   // Zx.SvgBrushList
   RegisterComponents('ZxSkia', [TZxSvgBrushList, TZxSvgGlyph]);
+  RegisterComponentEditor(TZxSvgBrushList, TZxSvgBrushListComponentEditor);
   // Zx.Text
   RegisterComponents('ZxSkia', [TZxText]);
   // Zx.Buttons
