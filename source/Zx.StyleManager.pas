@@ -20,14 +20,13 @@ uses
   FMX.Styles;
 
 type
+  TDataModuleClass = class of TDataModule;
+
   IZxStylesHolder = interface
     ['{0A7BBEC4-54BA-458C-8365-201B643E7EE5}']
   end;
 
   TZxStyleManager = class
-  private type
-    TDataModuleClass = class of TDataModule;
-
   private
     class function InternalAddStyles(const ASource, ATarget: TStyleContainer; AClone: Boolean): TArray<TFmxObject>;
     class function ActiveStyle: TStyleContainer;
