@@ -37,6 +37,7 @@ requires
 
 contains
   Zx.Designtime in '..\..\source\Zx.Designtime.pas',
-  Zx.Designtime.SvgBrushList in '..\..\source\Zx.Designtime.SvgBrushList.pas' {ZxSvgBrushListEditorForm: TFrame};
+  Zx.Designtime.SvgBrushList in '..\..\source\Zx.Designtime.SvgBrushList.pas' {ZxSvgBrushListEditorForm: TFrame},
+  Zx.Designtime.AnimatedImageSourceList in '..\..\source\Zx.Designtime.AnimatedImageSourceList.pas' {ZxAnimatedImageSourceListEditorForm};
 
 end.

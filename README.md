@@ -8,6 +8,7 @@ An open-source set of Delphi components for the FireMonkey framework that utiliz
 - [Svg components](#svg-components)
   - [TZxSvgGlyph](#tzxsvgglyph)
   - [TZxSvgBrushList](#tzxsvgbrushlist)
+- [Animated image components]($animated-image-components)
 - [Text components](#text-components)
   - [TZxText](#tzxtext)
   - [TZxTextControl](#tzxtextcontrol)
@@ -48,7 +49,7 @@ end;
 ```
 This way, _Click_ only executes from the _Tap_ method, and _Tap_ is executed only if the internal calculation concluded it was a tap, not a pan. With this implementation, it is enough to assign only _OnClick_ events for all platforms, instead of assigning both _OnClick_ and _OnTap_ events, and then wrap the _OnClick_ implementation into a compiler directive condition.
 
-_Note:_ I left this feature disabled by default since I'm unsure how the community will receive it (and it may break some existing code). I've also marked both _Click_ and _Tap_ methods as _final_ overrides and added new _DoClick_ and _DoTap_ methods, since otherwise, it is easy to break the fix by overriding the _Click_ method in a child class. To enable it, go to _Project > Options > Delphi Compiler_, and in _Conditional defines_ add `ZX_FIXMOBILECLICK`.
+_Note:_ I left this feature disabled by default since I'm unsure on how it may impact someone's existing code. I've also marked both _Click_ and _Tap_ methods as _final_ overrides and added new _DoClick_ and _DoTap_ methods, since it would be easy to break the fix by overriding those in a descendant class. To enable it, go to _Project > Options > Delphi Compiler_, and in _Conditional defines_ add `ZX_FIXMOBILECLICK`.
 
 ## Svg components
 Thanks to _skia4delphi_, we have a proper [SVG support](https://github.com/skia4delphi/skia4delphi/blob/main/Documents/SVG.md) in Delphi!
@@ -57,8 +58,13 @@ Thanks to _skia4delphi_, we have a proper [SVG support](https://github.com/skia4
 ZX provides a new glyph component that draws SVG instead of a bitmap. The class implements the `IGlyph` interface and is almost the same implementation as in `TGlyph` (with properties such as _AutoHide_) but without all the bitmap-related code.
 
 ### TZxSvgBrushList
-This class inherits from `TBaseImageList` and is a collection of `TSkSvgBrush` items. This implementation allows you to, for example, attach the `TZxSvgBrushList` component to a `TActionList.ImageList`, and then use the brushes by assigning `TAction.ImageIndex`. To display an item, use the above-mentioned `TZxSvgGlyph`.
-**Note:** The component does not yet have a design-time editor, so currently it is possible to manipulate it only through the _Structure view_.
+This class inherits from `TBaseImageList` and is a collection of `TSkSvgBrush` items. This implementation allows you to, for example, attach the `TZxSvgBrushList` component to a `TActionList.ImageList`, and then use the brushes by assigning `TAction.ImageIndex`. To display an item, use the above-mentioned `TZxSvgGlyph`. The component also has a design-time editor.
+
+## Animated image components
+
+### TZxAnimatedImageSourceList
+With implementation very similar to ([`TZxSvgBrushList`](#TZxSvgBrushList)), this component stores a list of sources that can then be assigned to [`TSkAnimatedImage`](https://github.com/skia4delphi/skia4delphi/blob/main/Documents/ANIMATED-IMAGES.md)'s _Source_ property. The component also has a design-time editor. 
+
 
 ## Text components
 Since the arrival of _skia4delphi_, we're able to:

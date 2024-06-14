@@ -35,7 +35,9 @@ uses
   Zx.Text,
   Zx.Buttons,
   Zx.Styles.Objects,
-  Zx.Designtime.SvgBrushList;
+  Zx.Designtime.SvgBrushList,
+  Zx.AnimatedImageSourceList,
+  Zx.Designtime.AnimatedImageSourceList;
 
 type
   { copied from FMX.Skia.Designtime - TSkAnimatedImageSourcePropertyEditor }
@@ -61,16 +63,27 @@ type
     class function TryEdit(const ABrushList: TZxSvgBrushList): Boolean; static;
   end;
 
+  { TZxAnimatedImageSourceListComponentEditor }
+
+  TZxAnimatedImageSourceListComponentEditor = class(TDefaultEditor)
+  public
+    procedure Edit; override;
+    class function TryEdit(const ASourceList: TZxAnimatedImageSourceList): Boolean; static;
+  end;
+
   { TZxAnimatedImageSourcePropertyEditor }
 
 procedure TZxAnimatedImageSourcePropertyEditor.Edit;
-var
-  LData: TBytes;
 begin
-  LData := AniSource.Data;
+  var
+  LSource := AniSource;
+  if LSource = nil then
+    Exit;
+  var
+  LData := LSource.Data;
   if TryEdit(LData) then
   begin
-    AniSource.Data := LData;
+    LSource.Data := LData;
     Modified;
   end;
 end;
@@ -82,12 +95,21 @@ end;
 
 function TZxAnimatedImageSourcePropertyEditor.GetIsDefault: Boolean;
 begin
-  Result := AniSource.Data <> nil;
+  var
+  LSource := AniSource;
+  Result := (LSource = nil) or (LSource.Data <> nil);
 end;
 
 function TZxAnimatedImageSourcePropertyEditor.GetAniSource: TSkAnimatedImage.TSource;
 begin
-  Result := TZxAnimatedImageActiveStyleObject(GetComponent(0)).AnimatedImage.Source;
+  var
+  LObject := GetComponent(0);
+  if LObject is TZxAnimatedImageActiveStyleObject then
+    Result := TZxAnimatedImageActiveStyleObject(LObject).AnimatedImage.Source
+  else if LObject is TZxAnimatedImageSourceItem then
+    Result := TZxAnimatedImageSourceItem(LObject).Source
+  else
+    Result := nil;
 end;
 
 function TZxAnimatedImageSourcePropertyEditor.GetValue: string;
@@ -127,11 +149,36 @@ begin
   end;
 end;
 
+{ TZxAnimatedImageSourceListComponentEditor }
+
+procedure TZxAnimatedImageSourceListComponentEditor.Edit;
+begin
+  if TryEdit(TZxAnimatedImageSourceList(Component)) then
+    if Designer <> nil then
+      Designer.Modified;
+end;
+
+class function TZxAnimatedImageSourceListComponentEditor.TryEdit(const ASourceList: TZxAnimatedImageSourceList): Boolean;
+begin
+  var
+  LEditorForm := TZxAnimatedImageSourceListEditorForm.Create(Application);
+  try
+    Result := LEditorForm.ShowModal(ASourceList) = mrOk;
+  finally
+    LEditorForm.Free;
+  end;
+end;
+
 procedure Register;
 begin
   // Zx.SvgBrushList
   RegisterComponents('ZxSkia', [TZxSvgBrushList, TZxSvgGlyph]);
   RegisterComponentEditor(TZxSvgBrushList, TZxSvgBrushListComponentEditor);
+  // Zx.AnimatedImageSourceList
+  RegisterComponents('ZxSkia', [TZxAnimatedImageSourceList]);
+  RegisterComponentEditor(TZxAnimatedImageSourceList, TZxAnimatedImageSourceListComponentEditor);
+  RegisterPropertyEditor(TypeInfo(TSkAnimatedImage.TSource), TZxAnimatedImageSourceItem, 'Source',
+    TZxAnimatedImageSourcePropertyEditor);
   // Zx.Text
   RegisterComponents('ZxSkia', [TZxText]);
   // Zx.Buttons

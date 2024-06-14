@@ -92,17 +92,12 @@ type
     FOnChange: TNotifyEvent;
     procedure SetCollection(const Value: TZxSvgBrushCollection);
   protected
-    /// <summary> The method should perform several actions to reflect changes in the image list. Never call this
-    /// method yourself, but you can to use calling <b>Change</b></summary>
     procedure DoChange; override;
-    /// <summary> The getter of property <b>Count</b>. This method must be overridden in heir </summary>
     function GetCount: Integer; override;
   public
     constructor Create(Owner: TComponent); override;
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
-    /// <summary> Returns <c>True</c> if the <b>Index</b> element in the <b>Source</b> collection contains some
-    /// graphical data that can be used to create an image </summary>
     function SvgBrushExists(const Index: Integer): Boolean;
     function SvgBrush(const AIndex: Integer): TSkSvgBrush;
     function SvgSource(const AIndex: Integer): TSkSvgSource;
@@ -136,18 +131,10 @@ type
     procedure Draw(const ACanvas: ISkCanvas; const ADest: TRectF; const AOpacity: Single); override;
     procedure Loaded; override;
     procedure DoEndUpdate; override;
-    /// <summary> This vitrual method is calling event <b>OnChanged</b> and method <b>Redraw</b>. <b>DoChanged</b>
-    /// method is called in <b>ImagesChanged</b>. You shouldn't call this method manually </summary>
     procedure DoChanged; virtual;
-    /// <summary> This method is updating properties <b>SvgBrushExists</b>, and <b>Visible</b> in case if
-    /// <b>AutoHide</b> is true </summary>
     procedure UpdateVisible;
     procedure ActionChange(Sender: TBasicAction; CheckDefaults: Boolean); override;
-    /// <summary> Determines whether the <b>ImageIndex</b> property needs to be stored in the fmx-file</summary>
-    /// <returns> <c>True</c> if the <b>ImageIndex</b> property needs to be stored in the fmx-file</returns>
     function ImageIndexStored: Boolean; virtual;
-    /// <summary> Determines whether the <b>Images</b> property needs to be stored in the fmx-file </summary>
-    /// <returns> <c>True</c> if the <b>Images</b> property needs to be stored in the fmx-file</returns>
     function ImagesStored: Boolean; virtual;
     procedure SetVisible(const Value: Boolean); override;
     function VisibleStored: Boolean; override;
@@ -156,23 +143,13 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure AfterConstruction; override;
-    /// <summary> Should be called when you change an instance or reference to instance of <b>TBaseImageList</b> or the
-    /// <b>ImageIndex</b> property
-    /// <para>See also <b>FMX.ActnList.IGlyph</b></para></summary>
-    /// <remarks> This method is executed after change list of images. If TGlyph not in state Loading, Destroying,
-    /// Updating then this method call <b>DoChanged</b>, otherwise only set property <b>IsChanged</b> to true</remarks>
     procedure ImagesChanged;
-    /// <summary> Is <c>True</c> if <b>Images</b> is not <c>nil</c> and <b>ImageIndex</b> points to an existing picture.
+    /// <summary>Returns <c>True</c> if <b>Images</b> is assigned and <b>ImageIndex</b> links to a valid source.
     /// <para>See also <b>UpdateVisible</b>, <b>TZxSvgBrushList.SvgBrushExists</b></para></summary>
     property SvgBrushExists: Boolean read FSvgBrushExists;
-    /// <summary> If there have been some changes (which needed to paint) but not executed method DoChanged yet, then
-    /// this property is set to True, otherwise False</summary>
-    property IsChanged: Boolean read FIsChanged write FIsChanged;
   published
     property Action;
-    /// <summary> If <c>True</c>, then: at run time <b>Visible</b> property depends only on <b>SvgBrushExists</b>'s value;
-    /// at designtime <b>Visible</b> is always <c>True</c>. Otherwise, <b>Visible</b>'s value can be set
-    /// programmatically</summary>
+    /// <summary> If <c>True</c>, the property <b>Visible</b> depends on <b>SvgBrushExists</b> at runtime.</summary>
     property AutoHide: Boolean read FAutoHide write SetAutoHide default True;
     property Enabled;
     property Padding;
@@ -185,13 +162,8 @@ type
     property Opacity;
     property Visible;
     property Size;
-    /// <summary> Zero based index of an image. The default is <c>-1</c>.
-    /// <para> See also <b>FMX.ActnList.IGlyph</b></para></summary>
-    /// <remarks> If non-existing index is specified, an image is not drawn and no exception is raised</remarks>
     property ImageIndex: TImageIndex read GetImageIndex write SetImageIndex stored ImageIndexStored;
-    /// <summary> The list of images. Can be <c>nil</c>. <para>See also <b>FMX.ActnList.IGlyph</b></para></summary>
     property Images: TZxSvgBrushList read GetImages write SetImages stored ImagesStored;
-    /// <summary> This event handler is called after some changes in list of images and before painting </summary>
     property OnChanged: TNotifyEvent read FOnChanged write FOnChanged;
     property OnPaint;
     property OnPainting;

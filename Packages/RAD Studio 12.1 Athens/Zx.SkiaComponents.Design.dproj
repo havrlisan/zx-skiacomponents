@@ -170,6 +170,10 @@
             <FormType>fmx</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
+        <DCCReference Include="..\..\source\Zx.Designtime.AnimatedImageSourceList.pas">
+            <Form>ZxAnimatedImageSourceListEditorForm</Form>
+            <FormType>fmx</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

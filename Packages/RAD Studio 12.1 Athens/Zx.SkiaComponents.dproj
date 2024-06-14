@@ -153,6 +153,7 @@
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
         <DCCReference Include="..\..\source\Zx.Controls.pas"/>
+        <DCCReference Include="..\..\source\Zx.AnimatedImageSourceList.pas"/>
         <RcItem Include="..\..\Resources\Images\TZxText.bmp">
             <ResourceType>BITMAP</ResourceType>
             <ResourceId>TZxText</ResourceId>
@@ -188,6 +189,10 @@
         <RcItem Include="..\..\Resources\Images\TZxCustomStyleObject.bmp">
             <ResourceType>BITMAP</ResourceType>
             <ResourceId>TZxCustomStyleObject</ResourceId>
+        </RcItem>
+        <RcItem Include="..\..\Resources\Images\TZxAnimatedImageSourceList.bmp">
+            <ResourceType>BITMAP</ResourceType>
+            <ResourceId>TZxAnimatedImageSourceList</ResourceId>
         </RcItem>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
@@ -227,9 +232,9 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\23.0\Bpl\Win64\Zx_SkiaComponents.bpl" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\23.0\Bpl\Win64\Zx.SkiaComponents.bpl" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win64">
-                        <RemoteName>Zx_SkiaComponents.bpl</RemoteName>
+                        <RemoteName>Zx.SkiaComponents.bpl</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
