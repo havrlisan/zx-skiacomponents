@@ -8,7 +8,7 @@
 { found in the LICENSE file.                                             }
 {                                                                        }
 {************************************************************************}
-unit uFullDemo;
+unit FullDemo.Main;
 
 interface
 
