@@ -24,42 +24,84 @@ type
 
   IZxStylesHolder = interface
     ['{0A7BBEC4-54BA-458C-8365-201B643E7EE5}']
+    procedure AddStyles(const AStyles: TArray<TFmxObject>);
+    procedure Unload;
+    function IsEmpty: Boolean;
   end;
 
   TZxStyleManager = class
-  private
+  strict private
+    class var FStyleHolders: TArray<IZxStylesHolder>;
+    class destructor ClassDestroy;
     class function InternalAddStyles(const ASource, ATarget: TStyleContainer; AClone: Boolean): TArray<TFmxObject>;
     class function ActiveStyle: TStyleContainer;
   public
     class function CanAddStyles: Boolean;
-    class function AddStyles(const ADataModuleClass: TDataModuleClass): IZxStylesHolder; overload;
-    class function AddStyles(const AStyleContainer: TStyleContainer; const AClone: Boolean): IZxStylesHolder; overload;
+    { First two AddStyles methods are for simple usage, where TZxStyleManager handles style unloading }
+    class procedure AddStyles(ADataModuleClass: TDataModuleClass); overload;
+    class procedure AddStyles(AStyleContainer: TStyleContainer; AClone: Boolean); overload;
+    { Second two AddStyles methods are for custom implementation of TZxStylesHolder; style unloading needs to be manually handled }
+    class procedure AddStyles(ADataModuleClass: TDataModuleClass; const AStylesHolder: IZxStylesHolder); overload;
+    class procedure AddStyles(AStyleContainer: TStyleContainer; AClone: Boolean; const AStylesHolder: IZxStylesHolder); overload;
     class procedure RemoveStyles(const AStylesHodler: IZxStylesHolder);
   end;
 
-implementation
-
-type
   TZxStylesHolder = class(TInterfacedObject, IZxStylesHolder, IFreeNotification)
   strict private
     FStyles: TList<TFmxObject>;
     FUnloaded: Boolean;
     procedure OnStylesNotify(Sender: TObject; const Item: TFmxObject; Action: TCollectionNotification);
-  protected
+  strict private
+    { IZxStylesHolder }
+    procedure AddStyles(const AStyles: TArray<TFmxObject>);
+    procedure Unload;
+    function IsEmpty: Boolean;
     { IFreeNotification }
     procedure FreeNotification(AObject: TObject);
+  strict protected
+    procedure DoOnStylesNotify(Sender: TObject; const Item: TFmxObject; Action: TCollectionNotification); virtual;
+    property Styles: TList<TFmxObject> read FStyles;
   public
     procedure AfterConstruction; override;
     destructor Destroy; override;
-    procedure AddStyles(const AStyles: TArray<TFmxObject>);
-    procedure Unload;
   end;
 
-  { TZxStyleManager }
+implementation
 
-class function TZxStyleManager.AddStyles(const ADataModuleClass: TDataModuleClass): IZxStylesHolder;
+{ TZxStyleManager }
+
+class destructor TZxStyleManager.ClassDestroy;
 begin
-  Result := TZxStylesHolder.Create;
+  for var LStylesHolder in FStyleHolders do
+    RemoveStyles(LStylesHolder);
+  FStyleHolders := [];
+end;
+
+class procedure TZxStyleManager.AddStyles(ADataModuleClass: TDataModuleClass);
+begin
+  var
+  LStylesHolder := TZxStylesHolder.Create as IZxStylesHolder;
+  AddStyles(ADataModuleClass, LStylesHolder);
+  if not LStylesHolder.IsEmpty then
+    FStyleHolders := FStyleHolders + [LStylesHolder];
+end;
+
+class procedure TZxStyleManager.AddStyles(AStyleContainer: TStyleContainer; AClone: Boolean);
+begin
+  var
+  LStyles := InternalAddStyles(AStyleContainer, ActiveStyle, AClone);
+  if Length(LStyles) > 0 then
+  begin
+    var
+    LStylesHolder := TZxStylesHolder.Create as IZxStylesHolder;
+    LStylesHolder.AddStyles(LStyles);
+    FStyleHolders := FStyleHolders + [LStylesHolder];
+  end;
+end;
+
+class procedure TZxStyleManager.AddStyles(ADataModuleClass: TDataModuleClass; const AStylesHolder: IZxStylesHolder);
+begin
+  Assert(Assigned(AStylesHolder), 'TZxStyleManager.AddStyles: AStylesHolder must be assigned');
   var
   LTarget := ActiveStyle;
   if LTarget = nil then
@@ -72,19 +114,20 @@ begin
       begin
         var
         LStyles := InternalAddStyles(TStyleBook(LComponent).Style as TStyleContainer, LTarget, False);
-        TZxStylesHolder(Result).AddStyles(LStyles);
+        AStylesHolder.AddStyles(LStyles);
       end;
   finally
     LDataModule.Free;
   end;
 end;
 
-class function TZxStyleManager.AddStyles(const AStyleContainer: TStyleContainer; const AClone: Boolean): IZxStylesHolder;
+class procedure TZxStyleManager.AddStyles(AStyleContainer: TStyleContainer; AClone: Boolean;
+  const AStylesHolder: IZxStylesHolder);
 begin
-  Result := TZxStylesHolder.Create;
+  Assert(Assigned(AStylesHolder), 'TZxStyleManager.AddStyles: AStylesHolder must be assigned');
   var
   LStyles := InternalAddStyles(AStyleContainer, ActiveStyle, AClone);
-  TZxStylesHolder(Result).AddStyles(LStyles);
+  AStylesHolder.AddStyles(LStyles);
 end;
 
 class function TZxStyleManager.InternalAddStyles(const ASource, ATarget: TStyleContainer; AClone: Boolean): TArray<TFmxObject>;
@@ -106,7 +149,7 @@ end;
 
 class procedure TZxStyleManager.RemoveStyles(const AStylesHodler: IZxStylesHolder);
 begin
-  TZxStylesHolder(AStylesHodler).Unload;
+  AStylesHodler.Unload;
 end;
 
 class function TZxStyleManager.ActiveStyle: TStyleContainer;
@@ -143,8 +186,15 @@ begin
     FStyles.Delete(LIndex);
 end;
 
+function TZxStylesHolder.IsEmpty: Boolean;
+begin
+  Result := FStyles.IsEmpty;
+end;
+
 procedure TZxStylesHolder.AddStyles(const AStyles: TArray<TFmxObject>);
 begin
+  if Length(AStyles) = 0 then
+    Exit;
   FUnloaded := False;
   FStyles.AddRange(AStyles);
 end;
@@ -152,11 +202,17 @@ end;
 procedure TZxStylesHolder.OnStylesNotify(Sender: TObject; const Item: TFmxObject; Action: TCollectionNotification);
 begin
   case Action of
-    cnAdded:
+    TCollectionNotification.cnAdded:
       Item.AddFreeNotify(Self);
-    cnExtracted, cnRemoved:
+    TCollectionNotification.cnExtracted, TCollectionNotification.cnRemoved:
       Item.RemoveFreeNotify(Self);
   end;
+  DoOnStylesNotify(Sender, Item, Action);
+end;
+
+procedure TZxStylesHolder.DoOnStylesNotify(Sender: TObject; const Item: TFmxObject; Action: TCollectionNotification);
+begin
+
 end;
 
 procedure TZxStylesHolder.Unload;
