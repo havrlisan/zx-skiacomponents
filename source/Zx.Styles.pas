@@ -36,15 +36,10 @@ uses
 
 {$R *.dfm}
 
-var
-  LStyles: IZxStylesHolder;
-
 initialization
 
-LStyles := TZxStyleManager.AddStyles(TZxStyles);
+TZxStyleManager.AddStyles(TZxStyles);
 
 finalization
-
-TZxStyleManager.RemoveStyles(LStyles);
 
 end.
