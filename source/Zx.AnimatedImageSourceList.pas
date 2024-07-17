@@ -47,8 +47,11 @@ type
   private
     FName: String;
     procedure SetName(const Value: String);
+    procedure ReadData(AStream: TStream);
+    procedure WriteData(AStream: TStream);
   protected
     procedure AssignTo(Dest: TPersistent); override;
+    procedure DefineProperties(AFiler: TFiler); override;
     function GetDisplayName: string; override;
   published
     constructor Create(Collection: TCollection); override;
@@ -115,6 +118,22 @@ begin
   FSource := TSkAnimatedImage.TSource.Create(nil);
 end;
 
+procedure TZxAnimatedImageSourceItem.DefineProperties(AFiler: TFiler);
+
+  function DoWrite: Boolean;
+  begin
+    if AFiler.Ancestor <> nil then
+      Result := not(AFiler.Ancestor is TZxAnimatedImageSourceItem) or not TZxAnimatedImageSourceItem(AFiler.Ancestor)
+        .Source.Equals(FSource)
+    else
+      Result := FSource.Data <> nil;
+  end;
+
+begin
+  inherited;
+  AFiler.DefineBinaryProperty('Data', ReadData, WriteData, DoWrite);
+end;
+
 destructor TZxAnimatedImageSourceItem.Destroy;
 begin
   FSource.Free;
@@ -137,6 +156,27 @@ begin
   Result := Name;
   if Result.IsEmpty then
     Result := 'Item ' + Index.ToString;
+end;
+
+procedure TZxAnimatedImageSourceItem.ReadData(AStream: TStream);
+var
+  LBytes: TBytes;
+begin
+  if AStream.Size = 0 then
+    FSource.Data := nil
+  else
+  begin
+    SetLength(LBytes, AStream.Size - AStream.Position);
+    if Length(LBytes) > 0 then
+      AStream.ReadBuffer(LBytes, 0, Length(LBytes));
+    FSource.Data := LBytes;
+  end
+end;
+
+procedure TZxAnimatedImageSourceItem.WriteData(AStream: TStream);
+begin
+  if FSource.Data <> nil then
+    AStream.WriteBuffer(FSource.Data, Length(FSource.Data));
 end;
 
 procedure TZxAnimatedImageSourceItem.SetName(const Value: String);
@@ -281,5 +321,9 @@ function TZxAnimatedImageSourceList.SourceExists(const Index: Integer): Boolean;
 begin
   Result := (Index >= 0) and (Index < FCollection.Count);
 end;
+
+initialization
+
+RegisterClasses([TZxAnimatedImageSourceList, TZxAnimatedImageSourceCollection, TZxAnimatedImageSourceItem]);
 
 end.

@@ -64,7 +64,6 @@ type
     function GetImages: TBaseImageList; inline;
     procedure SetImages(const Value: TBaseImageList);
   protected
-  protected
     procedure ActionChange(Sender: TBasicAction; CheckDefaults: Boolean); override;
     function IsPressedStored: Boolean; virtual;
     procedure RestoreButtonState; virtual;
