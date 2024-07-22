@@ -497,7 +497,7 @@ begin
   if (csDesigning in ComponentState) and not Locked then
     DrawDesignBorder(DesignBorderColor, DesignBorderColor);
   if Assigned(SvgBrush) then
-    SvgBrush.Render(ACanvas, DrawRect, AbsoluteOpacity);
+    SvgBrush.Render(ACanvas, DrawRect, AOpacity);
   if (csDesigning in ComponentState) and not Locked and not FInPaintTo then
   begin
     DrawRect.Inflate(0.5, 0.5);
@@ -515,9 +515,9 @@ begin
       begin
         if Images = nil then
           Canvas.Stroke.Color := TAlphaColorRec.Red;
-        Canvas.DrawLine(DrawRect.TopLeft, DrawRect.BottomRight, AbsoluteOpacity);
+        Canvas.DrawLine(DrawRect.TopLeft, DrawRect.BottomRight, AOpacity);
         Canvas.DrawLine(TPointF.Create(DrawRect.Right, DrawRect.Top), TPointF.Create(DrawRect.Left, DrawRect.Bottom),
-          AbsoluteOpacity);
+          AOpacity);
         DrawRect := TRectF.Create(DrawRect.Left, DrawRect.Bottom, Width, Height);
       end;
       if ImageIndex <> -1 then
@@ -528,7 +528,7 @@ begin
         if DrawRect.Bottom <= Height then
         begin
           Canvas.Fill.Color := TAlphaColorRec.Darkgray;
-          Canvas.FillText(DrawRect, Inttostr(ImageIndex), False, AbsoluteOpacity, [], TTextAlign.Leading, TTextAlign.Leading);
+          Canvas.FillText(DrawRect, Inttostr(ImageIndex), False, AOpacity, [], TTextAlign.Leading, TTextAlign.Leading);
         end;
       end;
     end;
