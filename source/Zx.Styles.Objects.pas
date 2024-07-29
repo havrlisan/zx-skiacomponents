@@ -168,6 +168,7 @@ type
     procedure DoTriggered; override;
   public
     constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
     {
       Setting this property to published may seem like a simpler solution, but for
       some reason it will not be available for editing in the Object Inspector when
@@ -495,9 +496,9 @@ procedure TZxAnimatedImageActiveStyleObject.DefineProperties(AFiler: TFiler);
   begin
     if AFiler.Ancestor <> nil then
       Result := not(AFiler.Ancestor is TZxAnimatedImageActiveStyleObject) or
-        not TZxAnimatedImageActiveStyleObject(AFiler.Ancestor).AnimatedImage.Source.Equals(AnimatedImage.Source)
+        not TZxAnimatedImageActiveStyleObject(AFiler.Ancestor).AnimatedImage.Source.Equals(FAnimatedImage.Source)
     else
-      Result := AnimatedImage.Source.Data <> nil;
+      Result := FAnimatedImage.Source.Data <> nil;
   end;
 
 begin
@@ -505,18 +506,24 @@ begin
   AFiler.DefineBinaryProperty('AniSourceData', ReadData, WriteData, DoWrite);
 end;
 
+destructor TZxAnimatedImageActiveStyleObject.Destroy;
+begin
+  FAnimatedImage.Free;
+  inherited;
+end;
+
 procedure TZxAnimatedImageActiveStyleObject.ReadData(AStream: TStream);
 begin
   if AStream.Size = 0 then
-    AnimatedImage.Source.Data := nil
+    FAnimatedImage.Source.Data := nil
   else
-    AnimatedImage.LoadFromStream(AStream);
+    FAnimatedImage.LoadFromStream(AStream);
 end;
 
 procedure TZxAnimatedImageActiveStyleObject.WriteData(AStream: TStream);
 begin
-  if AnimatedImage.Source.Data <> nil then
-    AStream.WriteBuffer(AnimatedImage.Source.Data, Length(AnimatedImage.Source.Data));
+  if FAnimatedImage.Source.Data <> nil then
+    AStream.WriteBuffer(FAnimatedImage.Source.Data, Length(FAnimatedImage.Source.Data));
 end;
 
 procedure TZxAnimatedImageActiveStyleObject.DoTriggered;
