@@ -15,6 +15,14 @@ interface
 uses
   System.Classes,
   System.Generics.Collections,
+  { Skia is necessary for its initialization/finalization units }
+{$IFDEF CompilerVersion < 36}
+  Skia,
+  Skia.FMX,
+{$ELSE}
+  System.Skia,
+  FMX.Skia,
+{$ENDIF}
   FMX.Types,
   FMX.Controls,
   FMX.Styles;

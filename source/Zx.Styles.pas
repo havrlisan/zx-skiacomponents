@@ -40,6 +40,4 @@ initialization
 
 TZxStyleManager.AddStyles(TZxStyles);
 
-finalization
-
 end.
