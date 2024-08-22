@@ -14,6 +14,7 @@ interface
 
 uses
   System.Classes,
+  System.SysUtils,
   System.Generics.Collections,
   { Skia is necessary for its initialization/finalization units }
 {$IFDEF CompilerVersion < 36}
@@ -25,7 +26,14 @@ uses
 {$ENDIF}
   FMX.Types,
   FMX.Controls,
-  FMX.Styles;
+  FMX.Styles,
+  {All Zx units are here because all controls must be registered before calling UnpackAllBinaries}
+  Zx.Ani,
+  Zx.AnimatedImageSourceList,
+  Zx.Buttons,
+  Zx.Styles.Objects,
+  Zx.SvgBrushList,
+  Zx.Text;
 
 type
   TDataModuleClass = class of TDataModule;
@@ -141,9 +149,22 @@ end;
 class function TZxStyleManager.InternalAddStyles(const ASource, ATarget: TStyleContainer; AClone: Boolean): TArray<TFmxObject>;
 begin
   if (ASource = nil) or (ATarget = nil) then
+  begin
+    Log.d('TZxStylesManager.InternalAddStyles: Invalid call, ASource or ATarget is nil');
     Exit;
-  if ASource.Children = nil then
+  end;
+  try
     (ASource as IBinaryStyleContainer).UnpackAllBinaries;
+  except
+    on E: Exception do
+      Log.d('TZxStylesManager.InternalAddStyles: UnpackAllBinaries failed: ' + E.Message);
+  end;
+  if ASource.ChildrenCount = 0 then
+  begin
+    Log.d('TZxStylesManager.InternalAddStyles: No children found, skipping');
+    Exit;
+  end;
+  Log.d('TZxStylesManager.InternalAddStyles: Adding ' + ASource.ChildrenCount.ToString + ' styles');
   SetLength(Result, ASource.ChildrenCount);
   for var I := Pred(ASource.ChildrenCount) downto 0 do
   begin
