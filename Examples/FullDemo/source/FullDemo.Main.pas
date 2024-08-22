@@ -46,7 +46,6 @@ uses
 type
   TfrmFullDemo = class(TForm)
     sblExamples: TZxSvgBrushList;
-    sbMain: TStyleBook;
     vsbMain: TVertScrollBox;
     txtExample: TZxText;
     txtSection1: TZxText;
