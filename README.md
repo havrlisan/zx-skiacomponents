@@ -143,9 +143,19 @@ Caveats to this implementation are yet to be found.
 _WARNING:_ This implementation is not thoroughly tested on all platforms, so there is a possibility you may run into bugs or problems when using this approach. It has been tested with only one platform/collection defined, _Default_, as ZX's style approach is one-for-all. Feel free to report any issues or suggest improvements!
 
 ## How to use
-The following are the steps to use the `TZxStyleManager`:
-1. Create a `TDataModule` unit, add a `TStyleBook`, and define a style inside.
-2. Add _Zx.StyleManager_ unit in the implementation _uses_ section.
+There are 2 ways you can use the `TZxStyleManager`:
+1. The simpler implementation includes calling _TZxStyleManager.AddStyles_ without a `IZxStylesHolder` instance, which means the `TZxStyleManager` will handle the removal of your registered styles.
+2. Manually create a `TZxStylesHolder` instance and handle its lifetime. Call _TZxStyleManager.AddStyles_ with that instance; `TZxStyleManager` will put the registered styles inside it. To unregister the styles, call _TZxStyleManager.RemoveStyles_. This implementation allows you to add and remove different styles during run-time with an ease.
+
+The simpler implementation steps:
+1. Create a `TDataModule`, add a `TStyleBook`, and fill it with styles (you should also remove the global field that is used for registering the module to the _FMX.Forms.Application_ instance).
+2. Add _Zx.StyleManager_ unit in the _uses_ section.
+3. In the initialization section, call _TZxStyleManager.AddStyles_ with your data module class as the parameter.
+
+The manual handling implementation steps:
+1. Create a `TDataModule`, add a `TStyleBook`, and fill it with styles (you should also remove the global field that is used for registering the module to the _FMX.Forms.Application_ instance).
+2. Add _Zx.StyleManager_ unit in the _uses_ section.
 3. In the implementation section, declare a variable of type `IZxStylesHolder`.
-4. In the initialization section, call _TZxStyleManager.AddStyles_ with your data module class as the parameter, and store the return value in the previously declared variable.
-5. In the finalization section, call _TZxStyleManager.RemoveStyles_ with the previously declared variable as the parameter.
+4. In the initialization section, create a `TZxStylesHolder` instance and assign it to the previously declared variable.
+5. In the initialization section, call _TZxStyleManager.AddStyles_ with your data module class as the first parameter, and your previously declared variable as the second parameter.
+6. In the finalization section, call _TZxStyleManager.RemoveStyles_ with the previously declared variable as the parameter.
