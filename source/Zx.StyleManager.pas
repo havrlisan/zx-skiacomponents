@@ -16,7 +16,7 @@ uses
   System.Classes,
   System.SysUtils,
   System.Generics.Collections,
-  { Skia is necessary for its initialization/finalization units }
+  {Skia is necessary for its initialization/finalization units}
 {$IFDEF CompilerVersion < 36}
   Skia,
   Skia.FMX,
@@ -88,6 +88,11 @@ implementation
 
 class destructor TZxStyleManager.ClassDestroy;
 begin
+  {
+    Make sure TStyleCache instance is destroyed before destroying our registered
+    styles, because some of them might have ended up there for style recycling.
+  }
+  FMX.Controls.FreeControls;
   for var LStylesHolder in FStyleHolders do
     RemoveStyles(LStylesHolder);
   FStyleHolders := [];
