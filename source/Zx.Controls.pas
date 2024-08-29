@@ -13,10 +13,6 @@ unit Zx.Controls;
 interface
 
 {$I Zx.SkiaComponents.inc}
-{$IFNDEF MOBILEPLATFORM}
-{ fix for mobile platforms; prevents Click event when user pans and releases finger on the control }
-{$UNDEF ZX_FIXMOBILECLICK}
-{$ENDIF}
 
 uses
   System.Types,
