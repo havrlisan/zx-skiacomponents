@@ -30,7 +30,10 @@ uses
   FMX.Types,
   FMX.Objects,
   Zx.Ani,
-  Zx.Controls;
+  Zx.Controls,
+  Zx.Text,
+  FMX.ActnList,
+  Zx.TextControl;
 
 {$SCOPEDENUMS ON}
 
@@ -241,7 +244,6 @@ type
     function RadiusYStored: Boolean; virtual;
   strict protected
     function DoCreateAnimation: TZxAnimation; override;
-    function DurationStored: Boolean; override;
     procedure Draw(const ACanvas: ISkCanvas; const ADest: TRectF; const AOpacity: Single); override;
   public
     constructor Create(AOwner: TComponent); override;
@@ -254,9 +256,47 @@ type
     property RadiusY: Single read FRadiusY write SetRadiusY stored RadiusYStored;
   end;
 
-  [ComponentPlatformsAttribute(SkSupportedPlatformsMask)]
-  TZxCustomTextButtonStyleObject = class abstract(TZxCustomButtonStyleObject)
+  TZxCustomTextButtonStyleObject = class abstract(TZxCustomButtonStyleObject, ISkTextSettings, IObjectState, ICaption,
+    IZxPrefixStyle)
+  strict private
+    FText: TZxText;
+    procedure OnTextResized(Sender: TObject);
+  strict protected
+    procedure OnTriggerProcess(Sender: TObject); virtual; abstract;
+  strict protected
+    function DoCreateAnimation: TZxAnimation; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+    property Text: TZxText read FText implements ISkTextSettings, IObjectState, ICaption, IZxPrefixStyle;
+  end;
 
+  [ComponentPlatformsAttribute(SkSupportedPlatformsMask)]
+  TZxTextSettingsButtonStyleObject = class(TZxCustomTextButtonStyleObject)
+  strict private
+    FTriggerTextSettings: array [TZxButtonTriggerType] of TSkTextSettings;
+    function GetTriggerTextSettings(const AIndex: TZxButtonTriggerType): TSkTextSettings;
+    procedure SetTriggerTextSettings(const AIndex: TZxButtonTriggerType; const ATextSettings: TSkTextSettings);
+    procedure OnTextSettingsChanged(Sender: TObject);
+  strict protected
+    procedure UpdateTextSettings(const ATriggerType: TZxButtonTriggerType; const AApplyColor: Boolean);
+    procedure UpdateFontColor(const AValue: TAlphaColor);
+  strict protected
+    procedure Loaded; override;
+    procedure DoTriggered(const ATriggerType: TZxButtonTriggerType); override;
+    procedure OnTriggerProcess(Sender: TObject); override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    property NormalTextSettings: TSkTextSettings index TZxButtonTriggerType.Normal read GetTriggerTextSettings
+      write SetTriggerTextSettings;
+    property HotTextSettings: TSkTextSettings index TZxButtonTriggerType.Hot read GetTriggerTextSettings
+      write SetTriggerTextSettings;
+    property PressedTextSettings: TSkTextSettings index TZxButtonTriggerType.Pressed read GetTriggerTextSettings
+      write SetTriggerTextSettings;
+    property FocusedTextSettings: TSkTextSettings index TZxButtonTriggerType.Focused read GetTriggerTextSettings
+      write SetTriggerTextSettings;
   end;
 
 implementation
@@ -265,7 +305,8 @@ uses
   System.Rtti,
   System.Math.Vectors,
   System.Math,
-  FMX.Utils;
+  FMX.Utils,
+  FMX.Platform.Metrics;
 
 { TZxStyleTriggerHelper }
 
@@ -487,6 +528,7 @@ constructor TZxAnimatedImageActiveStyleObject.Create(AOwner: TComponent);
 begin
   inherited;
   FAnimatedImage := TSkAnimatedImage.Create(Self);
+  FAnimatedImage.Name := String.Empty;
   FAnimatedImage.Stored := False;
   FAnimatedImage.SetSubComponent(True);
   FAnimatedImage.Animation.Enabled := False;
@@ -619,6 +661,7 @@ begin
   FTriggers[TZxButtonTriggerType.Hot] := CreateAnimation('IsMouseOver=True;IsPressed=False');
   FTriggers[TZxButtonTriggerType.Focused] := CreateAnimation('IsMouseOver=False;IsFocused=True;IsPressed=False');
   FTriggers[TZxButtonTriggerType.Pressed] := CreateAnimation('IsMouseOver=True;IsPressed=True');
+  Duration := 0.1;
 end;
 
 destructor TZxCustomButtonStyleObject.Destroy;
@@ -680,7 +723,7 @@ end;
 
 function TZxCustomButtonStyleObject.DurationStored: Boolean;
 begin
-  Result := not SameValue(FDuration, 0, TEpsilon.Vector);
+  Result := not SameValue(FDuration, 0.1, TEpsilon.Vector);
 end;
 
 function TZxCustomButtonStyleObject.GetTrigger(const AIndex: TZxButtonTriggerType): TZxAnimation;
@@ -712,7 +755,6 @@ end;
 constructor TZxColorButtonStyleObject.Create(AOwner: TComponent);
 begin
   inherited;
-  Duration := 0.1;
   FPaint := TSkPaint.Create;
   FPaint.AntiAlias := True;
   UpdateColor(TAlphaColors.Null);
@@ -744,11 +786,6 @@ begin
     ACanvas.DrawRoundRect(ADest, FRadiusX, FRadiusY, FPaint)
   else
     ACanvas.DrawRect(ADest, FPaint);
-end;
-
-function TZxColorButtonStyleObject.DurationStored: Boolean;
-begin
-  Result := not SameValue(Duration, 0.1, TEpsilon.Vector);
 end;
 
 function TZxColorButtonStyleObject.GetTriggerColor(const AIndex: TZxButtonTriggerType): TAlphaColor;
@@ -794,8 +831,143 @@ begin
   end;
 end;
 
+{ TZxCustomTextButtonStyleObject }
+
+constructor TZxCustomTextButtonStyleObject.Create(AOwner: TComponent);
+begin
+  inherited;
+  FText := TZxText.Create(Self);
+  FText.Stored := False;
+  FText.SetSubComponent(True);
+  FText.Name := String.Empty;
+  FText.Text := 'Text';
+  FText.Align := TAlignLayout.Client;
+  FText.Parent := Self;
+  FText.OnResized := OnTextResized;
+end;
+
+destructor TZxCustomTextButtonStyleObject.Destroy;
+begin
+  FText.Free;
+  inherited;
+end;
+
+function TZxCustomTextButtonStyleObject.DoCreateAnimation: TZxAnimation;
+begin
+  Result := TZxAnimation.Create(nil);
+  Result.OnProcess := OnTriggerProcess;
+end;
+
+procedure TZxCustomTextButtonStyleObject.OnTextResized(Sender: TObject);
+begin
+  if csLoading in ComponentState then
+    Exit;
+  SetSize(FText.Size);
+end;
+
+{ TZxTextSettingsButtonStyleObject }
+
+constructor TZxTextSettingsButtonStyleObject.Create(AOwner: TComponent);
+var
+  PropertiesService: IFMXPlatformPropertiesService;
+begin
+  inherited;
+  var
+  LRefTextSettings := TSkTextSettings.Create(nil);
+  try
+    { copied from Zx.Buttons.TZxCustomButton.Create }
+    LRefTextSettings.MaxLines := 1;
+    LRefTextSettings.HorzAlign := TSkTextHorzAlign.Center;
+    if SupportsPlatformService(IFMXPlatformPropertiesService, PropertiesService) then
+      LRefTextSettings.Trimming := PropertiesService.GetValue('Trimming', TValue.From<TTextTrimming>(TTextTrimming.None))
+        .AsType<TTextTrimming>
+    else
+      LRefTextSettings.Trimming := TTextTrimming.None;
+
+    for var LTriggerType := Low(TZxButtonTriggerType) to High(TZxButtonTriggerType) do
+    begin
+      FTriggerTextSettings[LTriggerType] := TSkTextSettings.Create(Self);
+      FTriggerTextSettings[LTriggerType].Assign(LRefTextSettings);
+      FTriggerTextSettings[LTriggerType].OnChange := OnTextSettingsChanged;
+    end;
+  finally
+    LRefTextSettings.Free;
+  end;
+end;
+
+destructor TZxTextSettingsButtonStyleObject.Destroy;
+begin
+  for var LTriggerType := High(TZxButtonTriggerType) downto Low(TZxButtonTriggerType) do
+    FTriggerTextSettings[LTriggerType].Free;
+  inherited;
+end;
+
+procedure TZxTextSettingsButtonStyleObject.Loaded;
+begin
+  inherited;
+  UpdateTextSettings(TZxButtonTriggerType.Normal, True);
+end;
+
+procedure TZxTextSettingsButtonStyleObject.UpdateTextSettings(const ATriggerType: TZxButtonTriggerType;
+  const AApplyColor: Boolean);
+begin
+  var
+  LCurrentTextSettings := FTriggerTextSettings[ATriggerType];
+  var
+  LPreviousTextSettings := FTriggerTextSettings[Previous];
+  Text.TextSettings.BeginUpdate;
+  try
+    Text.TextSettings := LCurrentTextSettings;
+    if not AApplyColor then
+      Text.TextSettings.FontColor := LPreviousTextSettings.FontColor;
+  finally
+    Text.TextSettings.EndUpdate;
+  end;
+end;
+
+procedure TZxTextSettingsButtonStyleObject.UpdateFontColor(const AValue: TAlphaColor);
+begin
+  Text.TextSettings.FontColor := AValue;
+  Redraw;
+end;
+
+procedure TZxTextSettingsButtonStyleObject.DoTriggered(const ATriggerType: TZxButtonTriggerType);
+begin
+  inherited;
+  UpdateTextSettings(ATriggerType, False);
+end;
+
+procedure TZxTextSettingsButtonStyleObject.OnTextSettingsChanged(Sender: TObject);
+begin
+  if Sender = FTriggerTextSettings[Current] then
+    UpdateTextSettings(Current, True);
+end;
+
+procedure TZxTextSettingsButtonStyleObject.OnTriggerProcess(Sender: TObject);
+begin
+  var
+  LPreviousFontColor := FTriggerTextSettings[Previous].FontColor;
+  var
+  LCurrentFontColor := FTriggerTextSettings[Current].FontColor;
+  var
+  LFontColor := InterpolateColor(LPreviousFontColor, LCurrentFontColor, TAnimation(Sender).NormalizedTime);
+  UpdateFontColor(LFontColor);
+end;
+
+function TZxTextSettingsButtonStyleObject.GetTriggerTextSettings(const AIndex: TZxButtonTriggerType): TSkTextSettings;
+begin
+  Result := FTriggerTextSettings[AIndex];
+end;
+
+procedure TZxTextSettingsButtonStyleObject.SetTriggerTextSettings(const AIndex: TZxButtonTriggerType;
+  const ATextSettings: TSkTextSettings);
+begin
+  FTriggerTextSettings[AIndex].Assign(ATextSettings);
+end;
+
 initialization
 
-RegisterFmxClasses([TZxColorActiveStyleObject, TZxAnimatedImageActiveStyleObject, TZxColorButtonStyleObject]);
+RegisterFmxClasses([TZxColorActiveStyleObject, TZxAnimatedImageActiveStyleObject, TZxColorButtonStyleObject,
+  TZxTextSettingsButtonStyleObject]);
 
 end.

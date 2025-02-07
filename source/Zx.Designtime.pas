@@ -184,7 +184,8 @@ begin
   // Zx.Buttons
   RegisterComponents('ZxSkia', [TZxButton, TZxSpeedButton]);
   // Zx.Styles.Objects
-  RegisterComponents('ZxSkia', [TZxColorActiveStyleObject, TZxAnimatedImageActiveStyleObject, TZxColorButtonStyleObject]);
+  RegisterComponents('ZxSkia', [TZxColorActiveStyleObject, TZxAnimatedImageActiveStyleObject, TZxColorButtonStyleObject,
+    TZxTextSettingsButtonStyleObject]);
   RegisterPropertyEditor(TypeInfo(TSkAnimatedImage.TSource), TZxAnimatedImageActiveStyleObject, 'AniSource',
     TZxAnimatedImageSourcePropertyEditor);
 end;
