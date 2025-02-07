@@ -462,11 +462,9 @@ begin
         Text := LNewText;
     end;
     DeleteParagraph;
-    if (not IsUpdating) and FAutoSize and HasFitSizeChanged then
-      SetSize(Width, Height);
-    Redraw;
   finally
     EndUpdate;
+    Redraw;
   end;
 end;
 
