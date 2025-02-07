@@ -81,7 +81,7 @@ object frmFullDemo: TfrmFullDemo
       Size.Width = 362.000000000000000000
       Size.Height = 60.000000000000000000
       Size.PlatformDefault = False
-      TabOrder = 6
+      TabOrder = 7
       object btnGlyph: TZxButton
         Align = Left
         AutoSize = True
@@ -170,7 +170,7 @@ object frmFullDemo: TfrmFullDemo
       Size.Width = 362.000000000000000000
       Size.Height = 40.000000000000000000
       Size.PlatformDefault = False
-      TabOrder = 5
+      TabOrder = 6
       object btnColorActive: TZxButton
         Align = HorzCenter
         Margins.Right = 160.000000000000000000
@@ -226,7 +226,7 @@ object frmFullDemo: TfrmFullDemo
       Size.Width = 362.000000000000000000
       Size.Height = 40.000000000000000000
       Size.PlatformDefault = False
-      TabOrder = 4
+      TabOrder = 5
       object btnAnimatedImageActive: TZxButton
         Align = HorzCenter
         Margins.Right = 160.000000000000000000
@@ -241,7 +241,7 @@ object frmFullDemo: TfrmFullDemo
         TextSettings.MaxLines = 2
         TextSettings.Trimming = None
       end
-      object ZxButton1: TZxButton
+      object btnAniLoopTrigger: TZxButton
         Align = HorzCenter
         Margins.Left = 160.000000000000000000
         Position.X = 191.000000000000000000
@@ -253,6 +253,45 @@ object frmFullDemo: TfrmFullDemo
         Text = 'AniLoop trigger'
         TextSettings.HorzAlign = Center
         TextSettings.MaxLines = 1
+        TextSettings.Trimming = None
+      end
+    end
+    object layStylesExample3: TLayout
+      Align = Top
+      Margins.Left = 20.000000000000000000
+      Margins.Top = 10.000000000000000000
+      Position.X = 20.000000000000000000
+      Position.Y = 691.000000000000000000
+      Size.Width = 362.000000000000000000
+      Size.Height = 40.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 4
+      object btnTextStyle: TZxButton
+        Align = HorzCenter
+        Margins.Right = 160.000000000000000000
+        Position.X = 31.000000000000000000
+        Size.Width = 140.000000000000000000
+        Size.Height = 40.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = 'button.textsettings'
+        TabOrder = 1
+        Text = 'Animated text settings'
+        TextSettings.HorzAlign = Center
+        TextSettings.MaxLines = 2
+        TextSettings.Trimming = None
+      end
+      object btnCombined: TZxButton
+        Align = HorzCenter
+        Margins.Left = 160.000000000000000000
+        Position.X = 191.000000000000000000
+        Size.Width = 140.000000000000000000
+        Size.Height = 40.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = 'button.combined'
+        TabOrder = 0
+        Text = 'Animations can be combined!'
+        TextSettings.HorzAlign = Center
+        TextSettings.MaxLines = 2
         TextSettings.Trimming = None
       end
     end

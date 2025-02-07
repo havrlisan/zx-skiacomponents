@@ -41,7 +41,8 @@ uses
   FMX.ActnList,
   Zx.TextControl,
   Zx.Text,
-  FMX.Objects, Zx.Controls;
+  FMX.Objects,
+  Zx.Controls;
 
 type
   TfrmFullDemo = class(TForm)
@@ -68,7 +69,10 @@ type
     btnButtonStyle: TZxButton;
     lblTitle: TSkLabel;
     Line3: TLine;
-    ZxButton1: TZxButton;
+    btnAniLoopTrigger: TZxButton;
+    layStylesExample3: TLayout;
+    btnTextStyle: TZxButton;
+    btnCombined: TZxButton;
     procedure btnGlyphClick(Sender: TObject);
     procedure btnMultilineClick(Sender: TObject);
   private const
