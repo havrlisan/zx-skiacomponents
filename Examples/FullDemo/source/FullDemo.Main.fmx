@@ -4,7 +4,7 @@ object frmFullDemo: TfrmFullDemo
   BorderIcons = [biSystemMenu]
   BorderStyle = Single
   Caption = 'ZxSkiaComponents FullDemo'
-  ClientHeight = 790
+  ClientHeight = 844
   ClientWidth = 382
   Constraints.MaxWidth = 500.000000000000000000
   Constraints.MinHeight = 600.000000000000000000
@@ -16,17 +16,17 @@ object frmFullDemo: TfrmFullDemo
   object vsbMain: TVertScrollBox
     Align = Client
     Size.Width = 382.000000000000000000
-    Size.Height = 747.000000000000000000
+    Size.Height = 801.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 0
     Viewport.Width = 382.000000000000000000
-    Viewport.Height = 747.000000000000000000
+    Viewport.Height = 801.000000000000000000
     object txtSection1: TZxText
       Align = Top
       AutoSize = True
       Margins.Bottom = 20.000000000000000000
       Size.Width = 382.000000000000000000
-      Size.Height = 21.000000000000000000
+      Size.Height = 19.000000000000000000
       Size.PlatformDefault = False
       Text = 'Text'
       StyledSettings = [Family, Size, Style, FontColor, Other]
@@ -37,9 +37,9 @@ object frmFullDemo: TfrmFullDemo
       AutoSize = True
       Margins.Left = 20.000000000000000000
       Position.X = 20.000000000000000000
-      Position.Y = 41.000000000000000000
+      Position.Y = 39.000000000000000000
       Size.Width = 362.000000000000000000
-      Size.Height = 126.000000000000000000
+      Size.Height = 114.000000000000000000
       Size.PlatformDefault = False
       Text = 
         'This is a TZxText control, a replacement for FMX'#39's TText. It has' +
@@ -54,9 +54,9 @@ object frmFullDemo: TfrmFullDemo
       Align = Top
       AutoSize = True
       Margins.Bottom = 20.000000000000000000
-      Position.Y = 208.000000000000000000
+      Position.Y = 194.000000000000000000
       Size.Width = 382.000000000000000000
-      Size.Height = 21.000000000000000000
+      Size.Height = 19.000000000000000000
       Size.PlatformDefault = False
       Text = 'Buttons'
       StyledSettings = [Family, Size, Style, FontColor, Other]
@@ -68,7 +68,7 @@ object frmFullDemo: TfrmFullDemo
       Opacity = 0.300000011920929000
       Margins.Top = 20.000000000000000000
       Margins.Bottom = 20.000000000000000000
-      Position.Y = 187.000000000000000000
+      Position.Y = 173.000000000000000000
       Size.Width = 382.000000000000000000
       Size.Height = 1.000000000000000000
       Size.PlatformDefault = False
@@ -77,11 +77,11 @@ object frmFullDemo: TfrmFullDemo
       Align = Top
       Margins.Left = 20.000000000000000000
       Position.X = 20.000000000000000000
-      Position.Y = 249.000000000000000000
+      Position.Y = 233.000000000000000000
       Size.Width = 362.000000000000000000
       Size.Height = 60.000000000000000000
       Size.PlatformDefault = False
-      TabOrder = 7
+      TabOrder = 8
       object btnGlyph: TZxButton
         Align = Left
         AutoSize = True
@@ -127,9 +127,9 @@ object frmFullDemo: TfrmFullDemo
       Margins.Left = 20.000000000000000000
       Margins.Top = 20.000000000000000000
       Position.X = 20.000000000000000000
-      Position.Y = 429.000000000000000000
+      Position.Y = 390.000000000000000000
       Size.Width = 362.000000000000000000
-      Size.Height = 80.000000000000000000
+      Size.Height = 76.000000000000000000
       Size.PlatformDefault = False
       Text = 
         'Another feature Zx buttons have is that on mobile platforms, the' +
@@ -145,7 +145,7 @@ object frmFullDemo: TfrmFullDemo
       Opacity = 0.300000011920929000
       Margins.Top = 20.000000000000000000
       Margins.Bottom = 20.000000000000000000
-      Position.Y = 529.000000000000000000
+      Position.Y = 486.000000000000000000
       Size.Width = 382.000000000000000000
       Size.Height = 1.000000000000000000
       Size.PlatformDefault = False
@@ -154,9 +154,9 @@ object frmFullDemo: TfrmFullDemo
       Align = Top
       AutoSize = True
       Margins.Bottom = 20.000000000000000000
-      Position.Y = 550.000000000000000000
+      Position.Y = 507.000000000000000000
       Size.Width = 382.000000000000000000
-      Size.Height = 21.000000000000000000
+      Size.Height = 19.000000000000000000
       Size.PlatformDefault = False
       Text = 'Styles'
       StyledSettings = [Family, Size, Style, FontColor, Other]
@@ -166,11 +166,11 @@ object frmFullDemo: TfrmFullDemo
       Align = Top
       Margins.Left = 20.000000000000000000
       Position.X = 20.000000000000000000
-      Position.Y = 591.000000000000000000
+      Position.Y = 546.000000000000000000
       Size.Width = 362.000000000000000000
       Size.Height = 40.000000000000000000
       Size.PlatformDefault = False
-      TabOrder = 6
+      TabOrder = 7
       object btnColorActive: TZxButton
         Align = HorzCenter
         Margins.Right = 160.000000000000000000
@@ -206,9 +206,9 @@ object frmFullDemo: TfrmFullDemo
       Margins.Left = 20.000000000000000000
       Margins.Top = 20.000000000000000000
       Position.X = 20.000000000000000000
-      Position.Y = 329.000000000000000000
+      Position.Y = 313.000000000000000000
       Size.Width = 362.000000000000000000
-      Size.Height = 80.000000000000000000
+      Size.Height = 57.000000000000000000
       Size.PlatformDefault = False
       Text = 
         'Zx buttons implement TBaseImageList instead of TCustomImageList,' +
@@ -222,11 +222,11 @@ object frmFullDemo: TfrmFullDemo
       Margins.Left = 20.000000000000000000
       Margins.Top = 10.000000000000000000
       Position.X = 20.000000000000000000
-      Position.Y = 641.000000000000000000
+      Position.Y = 596.000000000000000000
       Size.Width = 362.000000000000000000
       Size.Height = 40.000000000000000000
       Size.PlatformDefault = False
-      TabOrder = 5
+      TabOrder = 6
       object btnAnimatedImageActive: TZxButton
         Align = HorzCenter
         Margins.Right = 160.000000000000000000
@@ -261,11 +261,11 @@ object frmFullDemo: TfrmFullDemo
       Margins.Left = 20.000000000000000000
       Margins.Top = 10.000000000000000000
       Position.X = 20.000000000000000000
-      Position.Y = 691.000000000000000000
+      Position.Y = 646.000000000000000000
       Size.Width = 362.000000000000000000
       Size.Height = 40.000000000000000000
       Size.PlatformDefault = False
-      TabOrder = 4
+      TabOrder = 5
       object btnTextStyle: TZxButton
         Align = HorzCenter
         Margins.Right = 160.000000000000000000
@@ -293,6 +293,42 @@ object frmFullDemo: TfrmFullDemo
         TextSettings.HorzAlign = Center
         TextSettings.MaxLines = 2
         TextSettings.Trimming = None
+      end
+    end
+    object layStylesExample4: TLayout
+      Align = Top
+      Margins.Left = 20.000000000000000000
+      Margins.Top = 10.000000000000000000
+      Position.X = 20.000000000000000000
+      Position.Y = 696.000000000000000000
+      Size.Width = 362.000000000000000000
+      Size.Height = 40.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 4
+      object btnIcon: TZxButton
+        Align = Left
+        Images = sblExamples
+        ImageIndex = 4
+        Position.X = 178.949996948242200000
+        Size.Width = 40.000000000000000000
+        Size.Height = 40.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = 'button.icon'
+        TabOrder = 0
+        TextSettings.HorzAlign = Center
+        TextSettings.MaxLines = 2
+        TextSettings.Trimming = None
+      end
+      object lblButtonAsIcon: TZxText
+        Align = Left
+        AutoSize = True
+        Margins.Right = 16.000000000000000000
+        Size.Width = 162.949996948242200000
+        Size.Height = 40.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'This is a button as an icon:'
+        TextSettings.MaxLines = 100
+        StyleLookup = 'text.h5.justify'
       end
     end
   end
@@ -1499,6 +1535,16 @@ object frmFullDemo: TfrmFullDemo
           '(58.5856 57.0923)">'#13#10'<stop stop-color="#F71A1A"/>'#13#10'<stop offset=' +
           '"1" stop-color="#F7411A"/>'#13#10'</radialGradient>'#13#10'</defs>'#13#10'</svg>'
         Name = 'clown'
+      end
+      item
+        SvgBrush.Source = 
+          '<?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo' +
+          ', www.svgrepo.com, Generator: SVG Repo Mixer Tools -->'#13#10'<svg fil' +
+          'l="#000000" width="800px" height="800px" viewBox="0 0 24 24" xml' +
+          'ns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M6.' +
+          '69 2a1.75 1.75 0 00-1.75 1.756L5 21.253a.75.75 0 001.219.583L12 ' +
+          '17.21l5.782 4.625A.75.75 0 0019 21.25V3.75A1.75 1.75 0 0017.25 2' +
+          'H6.69z"/></svg>'
       end>
     Left = 328
     Top = 168

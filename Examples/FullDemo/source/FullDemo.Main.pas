@@ -73,6 +73,9 @@ type
     layStylesExample3: TLayout;
     btnTextStyle: TZxButton;
     btnCombined: TZxButton;
+    layStylesExample4: TLayout;
+    btnIcon: TZxButton;
+    lblButtonAsIcon: TZxText;
     procedure btnGlyphClick(Sender: TObject);
     procedure btnMultilineClick(Sender: TObject);
   private const
