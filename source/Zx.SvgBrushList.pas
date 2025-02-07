@@ -110,23 +110,24 @@ type
   TZxSvgGlyph = class(TZxCustomControl, IGlyph)
   public const
     DesignBorderColor = $A080D080;
-  private
+  strict private
     FImageLink: TImageLink;
+    FSvgBrush: TSkSvgBrush;
+    FOverrideColor: TAlphaColor;
     FIsChanging: Boolean;
     FIsChanged: Boolean;
     FAutoHide: Boolean;
     FOnChanged: TNotifyEvent;
     FSvgBrushExists: Boolean;
-    function GetImages: TZxSvgBrushList;
-    procedure SetImages(const Value: TZxSvgBrushList);
+    function GetImageList: TZxSvgBrushList; inline;
+    procedure SetImageList(const Value: TZxSvgBrushList);
     { IGlyph }
     function GetImageIndex: TImageIndex;
     procedure SetImageIndex(const Value: TImageIndex);
-    function GetImageList: TBaseImageList; inline;
-    procedure SetImageList(const Value: TBaseImageList);
-    function IGlyph.GetImages = GetImageList;
-    procedure IGlyph.SetImages = SetImageList;
+    function GetImages: TBaseImageList; inline;
+    procedure SetImages(const Value: TBaseImageList);
     procedure SetAutoHide(const Value: Boolean);
+    procedure SetOverrideColor(const AValue: TAlphaColor);
   protected
     procedure Draw(const ACanvas: ISkCanvas; const ADest: TRectF; const AOpacity: Single); override;
     procedure Loaded; override;
@@ -135,6 +136,7 @@ type
     procedure UpdateVisible;
     procedure ActionChange(Sender: TBasicAction; CheckDefaults: Boolean); override;
     function ImageIndexStored: Boolean; virtual;
+    function IsOverrideColorStored: Boolean;
     function ImagesStored: Boolean; virtual;
     procedure SetVisible(const Value: Boolean); override;
     function VisibleStored: Boolean; override;
@@ -163,7 +165,8 @@ type
     property Visible;
     property Size;
     property ImageIndex: TImageIndex read GetImageIndex write SetImageIndex stored ImageIndexStored;
-    property Images: TZxSvgBrushList read GetImages write SetImages stored ImagesStored;
+    property Images: TZxSvgBrushList read GetImageList write SetImageList stored ImagesStored;
+    property OverrideColor: TAlphaColor read FOverrideColor write SetOverrideColor stored IsOverrideColorStored;
     property OnChanged: TNotifyEvent read FOnChanged write FOnChanged;
     property OnPaint;
     property OnPainting;
@@ -359,21 +362,21 @@ begin
 end;
 
 type
-  TSynFMXGlyphImageLinkEx = class(TGlyphImageLink)
+  TZxGlyphImageLinkEx = class(TGlyphImageLink)
   protected
     procedure Change; override;
   public
     constructor Create(AOwner: TZxSvgGlyph); reintroduce;
   end;
 
-  { TSynFMXGlyphImageLinkEx }
+  { TZxGlyphImageLinkEx }
 
-constructor TSynFMXGlyphImageLinkEx.Create(AOwner: TZxSvgGlyph);
+constructor TZxGlyphImageLinkEx.Create(AOwner: TZxSvgGlyph);
 begin
   inherited Create(AOwner);
 end;
 
-procedure TSynFMXGlyphImageLinkEx.Change;
+procedure TZxGlyphImageLinkEx.Change;
 begin
   if not(csDestroying in Owner.ComponentState) then
   begin
@@ -392,13 +395,15 @@ begin
   HitTest := False;
   FAutoHide := True;
   TabStop := False;
-  FImageLink := TSynFMXGlyphImageLinkEx.Create(Self);
+  FImageLink := TZxGlyphImageLinkEx.Create(Self);
   DrawCacheKind := TSkDrawCacheKind.Always;
+  FSvgBrush := TSkSvgBrush.Create;
 end;
 
 destructor TZxSvgGlyph.Destroy;
 begin
-  FreeAndNil(FImageLink);
+  FSvgBrush.Free;
+  FImageLink.Free;
   inherited;
 end;
 
@@ -450,6 +455,12 @@ begin
       FIsChanging := True;
       try
         UpdateVisible;
+        if FSvgBrushExists then
+        begin
+          FSvgBrush.Assign(Images.SvgBrush(ImageIndex));
+          if FOverrideColor <> Default (TAlphaColor) then
+            FSvgBrush.OverrideColor := FOverrideColor;
+        end;
         DoChanged;
       finally
         FIsChanged := False;
@@ -482,22 +493,20 @@ const
   MinCrossSize = 3;
   MaxCrossSize = 13;
 var
-  SvgBrush: TSkSvgBrush;
   CrossSize: Single;
 begin
   inherited;
   if [csLoading, csDestroying] * ComponentState <> [] then
     Exit;
-  var
-  DrawRect := LocalRect;
-  SvgBrush := nil;
-  if (Images <> nil) and (DrawRect.Width >= 1) and (DrawRect.Height >= 1) and (ImageIndex <> -1) and
-    ([csLoading, csUpdating, csDestroying] * Images.ComponentState = []) then
-    SvgBrush := Images.SvgBrush(ImageIndex);
   if (csDesigning in ComponentState) and not Locked then
     DrawDesignBorder(DesignBorderColor, DesignBorderColor);
-  if Assigned(SvgBrush) then
-    SvgBrush.Render(ACanvas, DrawRect, AOpacity);
+  var
+  DrawRect := LocalRect;
+  var
+  LDrawSvgBrush := FSvgBrushExists and (DrawRect.Width >= 1) and (DrawRect.Height >= 1) and (ImageIndex <> -1) and
+    ([csLoading, csUpdating, csDestroying] * Images.ComponentState = []);
+  if LDrawSvgBrush then
+    FSvgBrush.Render(ACanvas, DrawRect, AOpacity);
   if (csDesigning in ComponentState) and not Locked and not FInPaintTo then
   begin
     DrawRect.Inflate(0.5, 0.5);
@@ -511,13 +520,12 @@ begin
       DrawRect.TopLeft.Offset(2, 2);
       DrawRect.BottomRight := DrawRect.TopLeft;
       DrawRect.BottomRight.Offset(CrossSize, CrossSize);
-      if SvgBrush = nil then
+      if not LDrawSvgBrush then
       begin
         if Images = nil then
           Canvas.Stroke.Color := TAlphaColorRec.Red;
         Canvas.DrawLine(DrawRect.TopLeft, DrawRect.BottomRight, AOpacity);
-        Canvas.DrawLine(TPointF.Create(DrawRect.Right, DrawRect.Top), TPointF.Create(DrawRect.Left, DrawRect.Bottom),
-          AOpacity);
+        Canvas.DrawLine(TPointF.Create(DrawRect.Right, DrawRect.Top), TPointF.Create(DrawRect.Left, DrawRect.Bottom), AOpacity);
         DrawRect := TRectF.Create(DrawRect.Left, DrawRect.Bottom, Width, Height);
       end;
       if ImageIndex <> -1 then
@@ -535,15 +543,14 @@ begin
   end;
 end;
 
-function TZxSvgGlyph.GetImageList: TBaseImageList;
+function TZxSvgGlyph.GetImageList: TZxSvgBrushList;
 begin
-  Result := GetImages;
+  Result := TZxSvgBrushList(FImageLink.Images);
 end;
 
-procedure TZxSvgGlyph.SetImageList(const Value: TBaseImageList);
+procedure TZxSvgGlyph.SetImageList(const Value: TZxSvgBrushList);
 begin
-  ValidateInheritance(Value, TZxSvgBrushList);
-  SetImages(TZxSvgBrushList(Value));
+  FImageLink.Images := Value;
 end;
 
 function TZxSvgGlyph.GetDefaultSize: TSizeF;
@@ -586,14 +593,25 @@ begin
   Result := ActionClient or (ImageIndex <> -1);
 end;
 
-function TZxSvgGlyph.GetImages: TZxSvgBrushList;
+function TZxSvgGlyph.GetImages: TBaseImageList;
 begin
-  Result := TZxSvgBrushList(FImageLink.Images);
+  Result := GetImageList;
 end;
 
-procedure TZxSvgGlyph.SetImages(const Value: TZxSvgBrushList);
+procedure TZxSvgGlyph.SetImages(const Value: TBaseImageList);
 begin
-  FImageLink.Images := Value;
+  ValidateInheritance(Value, TZxSvgBrushList);
+  SetImageList(TZxSvgBrushList(Value));
+end;
+
+procedure TZxSvgGlyph.SetOverrideColor(const AValue: TAlphaColor);
+begin
+  if FOverrideColor <> AValue then
+  begin
+    FOverrideColor := AValue;
+    FSvgBrush.OverrideColor := FOverrideColor;
+    Redraw;
+  end;
 end;
 
 function TZxSvgGlyph.ImagesStored: Boolean;
@@ -602,6 +620,11 @@ begin
     Result := True
   else
     Result := Images <> nil;
+end;
+
+function TZxSvgGlyph.IsOverrideColorStored: Boolean;
+begin
+  Result := FOverrideColor <> Default (TAlphaColor);
 end;
 
 initialization

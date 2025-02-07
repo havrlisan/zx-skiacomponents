@@ -33,7 +33,8 @@ uses
   Zx.Controls,
   Zx.Text,
   FMX.ActnList,
-  Zx.TextControl;
+  Zx.TextControl,
+  Zx.SvgBrushList;
 
 {$SCOPEDENUMS ON}
 
@@ -297,6 +298,39 @@ type
       write SetTriggerTextSettings;
     property FocusedTextSettings: TSkTextSettings index TZxButtonTriggerType.Focused read GetTriggerTextSettings
       write SetTriggerTextSettings;
+  end;
+
+  TZxCustomSvgGlyphButtonStyleObject = class(TZxCustomButtonStyleObject, IGlyph)
+  strict private
+    FGlyph: TZxSvgGlyph;
+  strict protected
+    procedure OnTriggerProcess(Sbender: TObject); virtual; abstract;
+  strict protected
+    procedure Loaded; override;
+    procedure DoRealign; override;
+    function DoCreateAnimation: TZxAnimation; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+    property Glyph: TZxSvgGlyph read FGlyph implements IGlyph;
+  end;
+
+  [ComponentPlatformsAttribute(SkSupportedPlatformsMask)]
+  TZxColorOverrideSvgGlyphButtonStyleObject = class(TZxCustomSvgGlyphButtonStyleObject)
+  strict private
+    FTriggerColors: array [TZxButtonTriggerType] of TAlphaColor;
+    function GetTriggerColor(const AIndex: TZxButtonTriggerType): TAlphaColor;
+    procedure SetTriggerColor(const AIndex: TZxButtonTriggerType; const AValue: TAlphaColor);
+  strict protected
+    procedure UpdateColor(const AValue: TAlphaColor); inline;
+  strict protected
+    procedure Loaded; override;
+    procedure OnTriggerProcess(Sender: TObject); override;
+  published
+    property NormalColor: TAlphaColor index TZxButtonTriggerType.Normal read GetTriggerColor write SetTriggerColor stored True;
+    property HotColor: TAlphaColor index TZxButtonTriggerType.Hot read GetTriggerColor write SetTriggerColor stored True;
+    property PressedColor: TAlphaColor index TZxButtonTriggerType.Pressed read GetTriggerColor write SetTriggerColor stored True;
+    property FocusedColor: TAlphaColor index TZxButtonTriggerType.Focused read GetTriggerColor write SetTriggerColor stored True;
   end;
 
 implementation
@@ -963,11 +997,84 @@ procedure TZxTextSettingsButtonStyleObject.SetTriggerTextSettings(const AIndex: 
   const ATextSettings: TSkTextSettings);
 begin
   FTriggerTextSettings[AIndex].Assign(ATextSettings);
+  if (AIndex = Current) and not Triggers[AIndex].Running then
+    UpdateTextSettings(AIndex, True);
+end;
+
+{ TZxCustomSvgGlyphButtonStyleObject }
+
+constructor TZxCustomSvgGlyphButtonStyleObject.Create(AOwner: TComponent);
+begin
+  inherited;
+  FGlyph := TZxSvgGlyph.Create(Self);
+  FGlyph.Stored := False;
+  FGlyph.SetSubComponent(True);
+  FGlyph.Name := String.Empty;
+  FGlyph.Align := TAlignLayout.Client;
+  FGlyph.Parent := Self;
+end;
+
+destructor TZxCustomSvgGlyphButtonStyleObject.Destroy;
+begin
+  FGlyph.Free;
+  inherited;
+end;
+
+procedure TZxCustomSvgGlyphButtonStyleObject.Loaded;
+begin
+  inherited;
+  Visible := FGlyph.Visible;
+end;
+
+procedure TZxCustomSvgGlyphButtonStyleObject.DoRealign;
+begin
+  inherited;
+  Visible := FGlyph.Visible;
+end;
+
+function TZxCustomSvgGlyphButtonStyleObject.DoCreateAnimation: TZxAnimation;
+begin
+  Result := TZxAnimation.Create(nil);
+  Result.OnProcess := OnTriggerProcess;
+end;
+
+{ TZxColorOverrideSvgGlyphButtonStyleObject }
+
+procedure TZxColorOverrideSvgGlyphButtonStyleObject.Loaded;
+begin
+  inherited;
+  UpdateColor(FTriggerColors[Current]);
+end;
+
+function TZxColorOverrideSvgGlyphButtonStyleObject.GetTriggerColor(const AIndex: TZxButtonTriggerType): TAlphaColor;
+begin
+  Result := FTriggerColors[AIndex];
+end;
+
+procedure TZxColorOverrideSvgGlyphButtonStyleObject.OnTriggerProcess(Sender: TObject);
+begin
+  UpdateColor(InterpolateColor(FTriggerColors[Previous], FTriggerColors[Current], TAnimation(Sender).NormalizedTime));
+end;
+
+procedure TZxColorOverrideSvgGlyphButtonStyleObject.SetTriggerColor(const AIndex: TZxButtonTriggerType;
+  const AValue: TAlphaColor);
+begin
+  if FTriggerColors[AIndex] <> AValue then
+  begin
+    FTriggerColors[AIndex] := AValue;
+    if (AIndex = Current) and not Triggers[AIndex].Running then
+      UpdateColor(AValue);
+  end;
+end;
+
+procedure TZxColorOverrideSvgGlyphButtonStyleObject.UpdateColor(const AValue: TAlphaColor);
+begin
+  Glyph.OverrideColor := AValue;
 end;
 
 initialization
 
 RegisterFmxClasses([TZxColorActiveStyleObject, TZxAnimatedImageActiveStyleObject, TZxColorButtonStyleObject,
-  TZxTextSettingsButtonStyleObject]);
+  TZxTextSettingsButtonStyleObject, TZxColorOverrideSvgGlyphButtonStyleObject]);
 
 end.
