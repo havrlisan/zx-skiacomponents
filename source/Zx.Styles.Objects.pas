@@ -1,13 +1,13 @@
-{************************************************************************}
-{                                                                        }
-{                           Zx-SkiaComponents                            }
-{                                                                        }
-{ Copyright (c) 2024 Zx-SkiaComponents Project.                          }
-{                                                                        }
-{ Use of this source code is governed by the MIT license that can be     }
-{ found in the LICENSE file.                                             }
-{                                                                        }
-{************************************************************************}
+{ ************************************************************************** }
+{ *                                                                        * }
+{ *                           Zx-SkiaComponents                            * }
+{ *                                                                        * }
+{ *           Copyright (c) 2025 Zx-SkiaComponents Project.                * }
+{ *                                                                        * }
+{ * Use of this source code is governed by the MIT license that can be     * }
+{ * found in the LICENSE file.                                             * }
+{ *                                                                        * }
+{ ************************************************************************** }
 unit Zx.Styles.Objects;
 
 interface
@@ -252,6 +252,11 @@ type
     property FocusedColor: TAlphaColor index TZxButtonTriggerType.Focused read GetTriggerColor write SetTriggerColor stored True;
     property RadiusX: Single read FRadiusX write SetRadiusX stored RadiusXStored;
     property RadiusY: Single read FRadiusY write SetRadiusY stored RadiusYStored;
+  end;
+
+  [ComponentPlatformsAttribute(SkSupportedPlatformsMask)]
+  TZxCustomTextButtonStyleObject = class abstract(TZxCustomButtonStyleObject)
+
   end;
 
 implementation
