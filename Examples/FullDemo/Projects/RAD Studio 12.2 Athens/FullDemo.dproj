@@ -7,6 +7,7 @@
         <MainSource>FullDemo.dpr</MainSource>
         <Platform Condition="'$(Platform)'==''">Android64</Platform>
         <ProjectGuid>{F013CBCF-2153-45DC-B5DE-C3C6D2A82E94}</ProjectGuid>
+        <ProjectName Condition="'$(ProjectName)'==''">FullDemo</ProjectName>
         <ProjectVersion>20.2</ProjectVersion>
         <TargetedPlatforms>693267</TargetedPlatforms>
     </PropertyGroup>
@@ -298,6 +299,7 @@
         </DCCReference>
         <DCCReference Include="..\..\source\FullDemo.Main.pas">
             <Form>frmFullDemo</Form>
+            <FormType>fmx</FormType>
         </DCCReference>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
