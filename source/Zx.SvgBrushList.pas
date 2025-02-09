@@ -134,6 +134,7 @@ type
     procedure DoEndUpdate; override;
     procedure DoChanged; virtual;
     procedure UpdateVisible;
+    procedure UpdateSvgBrush;
     procedure ActionChange(Sender: TBasicAction; CheckDefaults: Boolean); override;
     function ImageIndexStored: Boolean; virtual;
     function IsOverrideColorStored: Boolean;
@@ -417,6 +418,7 @@ procedure TZxSvgGlyph.Loaded;
 begin
   inherited;
   UpdateVisible;
+  UpdateSvgBrush;
 end;
 
 procedure TZxSvgGlyph.DoChanged;
@@ -455,12 +457,7 @@ begin
       FIsChanging := True;
       try
         UpdateVisible;
-        if FSvgBrushExists then
-        begin
-          FSvgBrush.Assign(Images.SvgBrush(ImageIndex));
-          if FOverrideColor <> Default (TAlphaColor) then
-            FSvgBrush.OverrideColor := FOverrideColor;
-        end;
+        UpdateSvgBrush;
         DoChanged;
       finally
         FIsChanged := False;
@@ -568,6 +565,16 @@ begin
   FSvgBrushExists := (Images <> nil) and Images.SvgBrushExists(ImageIndex);
   if FAutoHide then
     Visible := FSvgBrushExists;
+end;
+
+procedure TZxSvgGlyph.UpdateSvgBrush;
+begin
+  if FSvgBrushExists then
+  begin
+    FSvgBrush.Assign(Images.SvgBrush(ImageIndex));
+    if FOverrideColor <> Default (TAlphaColor) then
+      FSvgBrush.OverrideColor := FOverrideColor;
+  end;
 end;
 
 procedure TZxSvgGlyph.SetAutoHide(const Value: Boolean);
