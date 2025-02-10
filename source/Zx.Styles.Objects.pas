@@ -918,6 +918,7 @@ begin
   FText.Name := String.Empty;
   FText.Text := 'Text';
   FText.Align := TAlignLayout.Client;
+  FText.StyledSettings := [];
   FText.Parent := Self;
   FText.OnResized := OnTextResized;
 end;
