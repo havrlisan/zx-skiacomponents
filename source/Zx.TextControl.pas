@@ -91,6 +91,7 @@ type
 
     property TextObject: TControl read FTextObject;
   protected
+    function CustomTextSettingsClass: TSkTextSettingsInfo.TCustomTextSettingsClass; virtual;
     procedure TextSettingsChanged(Sender: TObject); virtual;
     function DoFilterControlText(const AText: string): string; virtual;
     procedure SetText(const Value: string); virtual;
@@ -156,7 +157,7 @@ begin
   inherited;
   FIsChanging := True;
   EnableExecuteAction := True;
-  FTextSettingsInfo := TSkTextSettingsInfo.Create(Self, nil);
+  FTextSettingsInfo := TSkTextSettingsInfo.Create(Self, CustomTextSettingsClass);
   FTextSettingsInfo.Design := True; // csDesigning in ComponentState;
   FTextSettingsInfo.OnChange := TextSettingsChanged;
   FPrefixStyle := DefaultPrefixStyle;
@@ -640,6 +641,11 @@ end;
 function TZxTextControl.StyledSettingsStored: Boolean;
 begin
   Result := StyledSettings <> DefaultStyledSettings;
+end;
+
+function TZxTextControl.CustomTextSettingsClass: TSkTextSettingsInfo.TCustomTextSettingsClass;
+begin
+  Result := nil;
 end;
 
 procedure TZxTextControl.TextSettingsChanged(Sender: TObject);

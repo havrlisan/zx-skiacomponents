@@ -132,8 +132,8 @@ type
     property ActiveAnimation: TZxColorAnimation read GetActiveAnimation;
   published
     property Duration;
-    property ActiveColor: TAlphaColor read GetActiveColor write SetActiveColor stored True;
-    property SourceColor: TAlphaColor read GetSourceColor write SetSourceColor stored True;
+    property ActiveColor: TAlphaColor read GetActiveColor write SetActiveColor default TAlphaColors.Null;
+    property SourceColor: TAlphaColor read GetSourceColor write SetSourceColor default TAlphaColors.Null;
     property RadiusX: Single read FRadiusX write SetRadiusX stored RadiusXStored;
     property RadiusY: Single read FRadiusY write SetRadiusY stored RadiusYStored;
   end;
@@ -224,6 +224,11 @@ type
     property Duration: Single read FDuration write SetDuration stored DurationStored;
   end;
 
+  /// <summary>
+  /// Control that draws a colored rectangle, depending on the trigger state. Color
+  /// change is animated. Mostly used as background of a button. You may curve the
+  /// corners with RadiusX and RadiusY properties.
+  /// </summary>
   [ComponentPlatformsAttribute(SkSupportedPlatformsMask)]
   TZxColorButtonStyleObject = class(TZxCustomButtonStyleObject)
   strict private
@@ -249,16 +254,30 @@ type
   public
     constructor Create(AOwner: TComponent); override;
   published
-    property NormalColor: TAlphaColor index TZxButtonTriggerType.Normal read GetTriggerColor write SetTriggerColor stored True;
-    property HotColor: TAlphaColor index TZxButtonTriggerType.Hot read GetTriggerColor write SetTriggerColor stored True;
-    property PressedColor: TAlphaColor index TZxButtonTriggerType.Pressed read GetTriggerColor write SetTriggerColor stored True;
-    property FocusedColor: TAlphaColor index TZxButtonTriggerType.Focused read GetTriggerColor write SetTriggerColor stored True;
+    property NormalColor: TAlphaColor index TZxButtonTriggerType.Normal read GetTriggerColor write SetTriggerColor
+      default TAlphaColors.Null;
+    property HotColor: TAlphaColor index TZxButtonTriggerType.Hot read GetTriggerColor write SetTriggerColor
+      default TAlphaColors.Null;
+    property PressedColor: TAlphaColor index TZxButtonTriggerType.Pressed read GetTriggerColor write SetTriggerColor
+      default TAlphaColors.Null;
+    property FocusedColor: TAlphaColor index TZxButtonTriggerType.Focused read GetTriggerColor write SetTriggerColor
+      default TAlphaColors.Null;
     property RadiusX: Single read FRadiusX write SetRadiusX stored RadiusXStored;
     property RadiusY: Single read FRadiusY write SetRadiusY stored RadiusYStored;
   end;
 
   TZxCustomTextButtonStyleObject = class abstract(TZxCustomButtonStyleObject, ISkTextSettings, IObjectState, ICaption,
     IZxPrefixStyle)
+  protected type
+    TZxButtonStyleTextSettings = class(TSkTextSettings)
+    public
+      constructor Create(const AOwner: TPersistent); override;
+    published
+      property MaxLines default 1;
+      property HorzAlign default TSkTextHorzAlign.Center;
+      property Trimming default TTextTrimming.None;
+    end;
+
   strict private
     FText: TZxText;
     procedure OnTextResized(Sender: TObject);
@@ -272,6 +291,11 @@ type
     property Text: TZxText read FText implements ISkTextSettings, IObjectState, ICaption, IZxPrefixStyle;
   end;
 
+  /// <summary>
+  /// Text of a button animated on button triggers by changing the text settings. Use
+  /// as a replacement for the default TZxText in the button style. Only the text
+  /// color is animated on trigger, other values are instantly applied.
+  /// </summary>
   [ComponentPlatformsAttribute(SkSupportedPlatformsMask)]
   TZxTextSettingsButtonStyleObject = class(TZxCustomTextButtonStyleObject)
   strict private
@@ -315,6 +339,10 @@ type
     property Glyph: TZxSvgGlyph read FGlyph implements IGlyph;
   end;
 
+  /// <summary>
+  /// Animated glyph color change. Use on simple, icon-like vector images. Color
+  /// transition is animated.
+  /// </summary>
   [ComponentPlatformsAttribute(SkSupportedPlatformsMask)]
   TZxColorOverrideSvgGlyphButtonStyleObject = class(TZxCustomSvgGlyphButtonStyleObject)
   strict private
@@ -327,10 +355,14 @@ type
     procedure Loaded; override;
     procedure OnTriggerProcess(Sender: TObject); override;
   published
-    property NormalColor: TAlphaColor index TZxButtonTriggerType.Normal read GetTriggerColor write SetTriggerColor stored True;
-    property HotColor: TAlphaColor index TZxButtonTriggerType.Hot read GetTriggerColor write SetTriggerColor stored True;
-    property PressedColor: TAlphaColor index TZxButtonTriggerType.Pressed read GetTriggerColor write SetTriggerColor stored True;
-    property FocusedColor: TAlphaColor index TZxButtonTriggerType.Focused read GetTriggerColor write SetTriggerColor stored True;
+    property NormalColor: TAlphaColor index TZxButtonTriggerType.Normal read GetTriggerColor write SetTriggerColor
+      default TAlphaColors.Null;
+    property HotColor: TAlphaColor index TZxButtonTriggerType.Hot read GetTriggerColor write SetTriggerColor
+      default TAlphaColors.Null;
+    property PressedColor: TAlphaColor index TZxButtonTriggerType.Pressed read GetTriggerColor write SetTriggerColor
+      default TAlphaColors.Null;
+    property FocusedColor: TAlphaColor index TZxButtonTriggerType.Focused read GetTriggerColor write SetTriggerColor
+      default TAlphaColors.Null;
   end;
 
 implementation
@@ -684,6 +716,16 @@ begin
   FAnimatedImage.Animation.Speed := AValue;
 end;
 
+{ TZxCustomTextButtonStyleObject.TZxButtonStyleTextSettings }
+
+constructor TZxCustomTextButtonStyleObject.TZxButtonStyleTextSettings.Create(const AOwner: TPersistent);
+begin
+  inherited Create(AOwner);
+  MaxLines := 1;
+  HorzAlign := TSkTextHorzAlign.Center;
+  Trimming := TTextTrimming.None;
+end;
+
 { TZxCustomButtonStyleObject }
 
 constructor TZxCustomButtonStyleObject.Create(AOwner: TComponent);
@@ -907,7 +949,7 @@ var
 begin
   inherited;
   var
-  LRefTextSettings := TSkTextSettings.Create(nil);
+  LRefTextSettings := TZxButtonStyleTextSettings.Create(nil);
   try
     { copied from Zx.Buttons.TZxCustomButton.Create }
     LRefTextSettings.MaxLines := 1;
@@ -920,7 +962,7 @@ begin
 
     for var LTriggerType := Low(TZxButtonTriggerType) to High(TZxButtonTriggerType) do
     begin
-      FTriggerTextSettings[LTriggerType] := TSkTextSettings.Create(Self);
+      FTriggerTextSettings[LTriggerType] := TZxButtonStyleTextSettings.Create(Self);
       FTriggerTextSettings[LTriggerType].Assign(LRefTextSettings);
       FTriggerTextSettings[LTriggerType].OnChange := OnTextSettingsChanged;
     end;
@@ -1075,6 +1117,7 @@ end;
 initialization
 
 RegisterFmxClasses([TZxColorActiveStyleObject, TZxAnimatedImageActiveStyleObject, TZxColorButtonStyleObject,
-  TZxTextSettingsButtonStyleObject, TZxColorOverrideSvgGlyphButtonStyleObject]);
+  TZxCustomTextButtonStyleObject.TZxButtonStyleTextSettings, TZxTextSettingsButtonStyleObject,
+  TZxColorOverrideSvgGlyphButtonStyleObject]);
 
 end.

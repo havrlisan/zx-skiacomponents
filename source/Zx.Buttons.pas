@@ -39,6 +39,16 @@ uses
 
 type
   TZxCustomButton = class(TZxTextControl, IGlyph)
+  public type
+    TZxButtonTextSettings = class(TSkTextSettingsInfo.TCustomTextSettings)
+    public
+      constructor Create(const AOwner: TPersistent); override;
+    published
+      property MaxLines default 1;
+      property HorzAlign default TSkTextHorzAlign.Center;
+      property Trimming default TTextTrimming.None;
+    end;
+
   private
     FPressing: Boolean;
     FIsPressed: Boolean;
@@ -64,6 +74,7 @@ type
     function GetImages: TBaseImageList; inline;
     procedure SetImages(const Value: TBaseImageList);
   protected
+    function CustomTextSettingsClass: TSkTextSettingsInfo.TCustomTextSettingsClass; override;
     procedure ActionChange(Sender: TBasicAction; CheckDefaults: Boolean); override;
     function IsPressedStored: Boolean; virtual;
     procedure RestoreButtonState; virtual;
@@ -312,6 +323,16 @@ uses
   FMX.Utils,
   FMX.Styles;
 
+{ TZxCustomButton.TZxButtonTextSettings }
+
+constructor TZxCustomButton.TZxButtonTextSettings.Create(const AOwner: TPersistent);
+begin
+  inherited Create(AOwner);
+  MaxLines := 1;
+  HorzAlign := TSkTextHorzAlign.Center;
+  Trimming := TTextTrimming.None;
+end;
+
 { TZxCustomButton }
 
 constructor TZxCustomButton.Create(AOwner: TComponent);
@@ -362,6 +383,11 @@ begin
       DefaultTouchTargetExpansion)
   else
     Result := inherited;
+end;
+
+function TZxCustomButton.CustomTextSettingsClass: TSkTextSettingsInfo.TCustomTextSettingsClass;
+begin
+  Result := TZxButtonTextSettings;
 end;
 
 procedure TZxCustomButton.ActionChange(Sender: TBasicAction; CheckDefaults: Boolean);
@@ -873,6 +899,6 @@ end;
 
 initialization
 
-RegisterFmxClasses([TZxButton, TZxSpeedButton]);
+RegisterFmxClasses([TZxCustomButton.TZxButtonTextSettings, TZxButton, TZxSpeedButton]);
 
 end.
