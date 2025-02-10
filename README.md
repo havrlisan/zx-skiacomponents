@@ -23,6 +23,8 @@ An open-source set of Delphi components for the FireMonkey framework that utiliz
     - [TZxColorButtonStyleObject](#tzxcolorbuttonstyleobject)
   - [TZxCustomTextButtonStyleObject](#tzxcustomtextbuttonstyleobject)
     - [TZxTextSettingsButtonStyleObject](#tzxtextsettingsbuttonstyleobject)
+  - [TZxCustomSvgGlyphButtonStyleObject](#tzxcustomsvgglyphbuttonstyleobject)
+    - [TZxColorOverrideSvgGlyphButtonStyleObject](#tzxcoloroverridesvgglyphbuttonstyleobject)
 - [Adding default style for components](#adding-default-style-for-components)
   - [How to use](#how-to-use)
   - [Advantages and disadvantages](#advantages-and-disadvantages)
@@ -119,10 +121,16 @@ This class implements the functionality of the `TButtonStyleObject` with the but
 A descendant of `TZxCustomButtonStyleObject` that draws a colored rectangle (fill color only) depending on the trigger state. When any trigger occurs, the animation interpolates the previous trigger color and the new trigger color. To set the trigger colors, use the published properties _NormalColor_, _HotColor_, _PressedColor_, or _FocusedColor_. The class also contains _RadiusX_ and _RadiusY_, allowing you to draw a round rectangle.
 
 ### TZxCustomTextButtonStyleObject
-This class implements the functionality of the `TButtonStyleObject` with the button trigger types (_Normal_, _Hot_, _Pressed_, _Focused_), but whose animations have a changeable duration through the published _Duration_ property. This class is meant to be inherited, and in the descendant, you should override the `OnTriggerProcess` method to implement custom behavior. See `TZxTextSettingsButtonStyleObject` for an example.
+This class descends from `TZxCustomButtonStyleObject`, and is meant to be inherited. It contains a `TZxText` instance to apply animated changes. In the descendant, you should override the `OnTriggerProcess` method to implement custom behavior. See `TZxTextSettingsButtonStyleObject` for an example.
 
 #### TZxTextSettingsButtonStyleObject
 A descendant of `TZxCustomTextButtonStyleObject` that changes the text settings depending on the trigger state. When any trigger occurs, all text settings of that trigger are instantly applied (font, weight, decorations, etc.), and only the font color is animated through interpolation of the previous trigger color and the new trigger color. To set the text settings, use the published properties _NormalTextSettings_, _HotTextSettings_, _PressedTextSettings_, or _FocusedTextSettings_.
+
+### TZxCustomSvgGlyphButtonStyleObject
+This class descends from `TZxCustomButtonStyleObject`, and is meant to be inherited. It contains a `TZxSvgGlyph` instance to apply animated changes. In the descendant, you should override the `OnTriggerProcess` method to implement custom behavior. See `TZxColorOverrideSvgGlyphButtonStyleObject` for an example.
+
+#### TZxColorOverrideSvgGlyphButtonStyleObject
+A descendant of `TZxCustomSvgGlyphButtonStyleObject` that animates the change of `TZxSvgGlyph`.OverrideColor property on triggers.
 
 # Adding default style for components 
 While writing these components, I had trouble finding how to define a default style for a component that:
