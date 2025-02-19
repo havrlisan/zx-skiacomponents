@@ -316,7 +316,12 @@ var
     if ADefaultTextSettings <> nil then
     begin
       if (AObject <> nil) and Supports(AObject, ISkTextSettings, AITextSettings) then
-        ADefaultTextSettings.Assign(AITextSettings.TextSettings)
+      begin
+        { set StyledSettings only if AObject supports IObjectState; otherwise it won't be able restore the previous value }
+        if Assigned(FObjectState) then
+          AITextSettings.StyledSettings := StyledSettings;
+        ADefaultTextSettings.Assign(AITextSettings.TextSettings);
+      end
       else
         ADefaultTextSettings.Assign(nil);
 

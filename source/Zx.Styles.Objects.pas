@@ -269,13 +269,9 @@ type
   TZxCustomTextButtonStyleObject = class abstract(TZxCustomButtonStyleObject, ISkTextSettings, IObjectState, ICaption,
     IZxPrefixStyle)
   protected type
-    TZxButtonStyleTextSettings = class(TSkTextSettings)
-    public
-      constructor Create(const AOwner: TPersistent); override;
-    published
-      property MaxLines default 1;
-      property HorzAlign default TSkTextHorzAlign.Center;
-      property Trimming default TTextTrimming.None;
+    TZxButtonStyleText = class(TZxText)
+    protected
+      function CustomTextSettingsClass: TSkTextSettingsInfo.TCustomTextSettingsClass; override;
     end;
 
   strict private
@@ -372,7 +368,9 @@ uses
   System.Math.Vectors,
   System.Math,
   FMX.Utils,
-  FMX.Platform.Metrics;
+  FMX.Platform.Metrics,
+  FMX.Platform,
+  Zx.Buttons;
 
 { TZxStyleTriggerHelper }
 
@@ -716,14 +714,11 @@ begin
   FAnimatedImage.Animation.Speed := AValue;
 end;
 
-{ TZxCustomTextButtonStyleObject.TZxButtonStyleTextSettings }
+{ TZxCustomTextButtonStyleObject.TZxButtonStyleText }
 
-constructor TZxCustomTextButtonStyleObject.TZxButtonStyleTextSettings.Create(const AOwner: TPersistent);
+function TZxCustomTextButtonStyleObject.TZxButtonStyleText.CustomTextSettingsClass: TSkTextSettingsInfo.TCustomTextSettingsClass;
 begin
-  inherited Create(AOwner);
-  MaxLines := 1;
-  HorzAlign := TSkTextHorzAlign.Center;
-  Trimming := TTextTrimming.None;
+  Result := TZxCustomButton.TZxButtonTextSettings;
 end;
 
 { TZxCustomButtonStyleObject }
@@ -912,7 +907,7 @@ end;
 constructor TZxCustomTextButtonStyleObject.Create(AOwner: TComponent);
 begin
   inherited;
-  FText := TZxText.Create(Self);
+  FText := TZxButtonStyleText.Create(Self);
   FText.Stored := False;
   FText.SetSubComponent(True);
   FText.Name := String.Empty;
@@ -945,30 +940,12 @@ end;
 { TZxTextSettingsButtonStyleObject }
 
 constructor TZxTextSettingsButtonStyleObject.Create(AOwner: TComponent);
-var
-  PropertiesService: IFMXPlatformPropertiesService;
 begin
   inherited;
-  var
-  LRefTextSettings := TZxButtonStyleTextSettings.Create(nil);
-  try
-    { copied from Zx.Buttons.TZxCustomButton.Create }
-    LRefTextSettings.MaxLines := 1;
-    LRefTextSettings.HorzAlign := TSkTextHorzAlign.Center;
-    if SupportsPlatformService(IFMXPlatformPropertiesService, PropertiesService) then
-      LRefTextSettings.Trimming := PropertiesService.GetValue('Trimming', TValue.From<TTextTrimming>(TTextTrimming.None))
-        .AsType<TTextTrimming>
-    else
-      LRefTextSettings.Trimming := TTextTrimming.None;
-
-    for var LTriggerType := Low(TZxButtonTriggerType) to High(TZxButtonTriggerType) do
-    begin
-      FTriggerTextSettings[LTriggerType] := TZxButtonStyleTextSettings.Create(Self);
-      FTriggerTextSettings[LTriggerType].Assign(LRefTextSettings);
-      FTriggerTextSettings[LTriggerType].OnChange := OnTextSettingsChanged;
-    end;
-  finally
-    LRefTextSettings.Free;
+  for var LTriggerType := Low(TZxButtonTriggerType) to High(TZxButtonTriggerType) do
+  begin
+    FTriggerTextSettings[LTriggerType] := TZxCustomButton.TZxButtonTextSettings.Create(Self);
+    FTriggerTextSettings[LTriggerType].OnChange := OnTextSettingsChanged;
   end;
 end;
 
@@ -992,19 +969,19 @@ begin
   LCurrentTextSettings := FTriggerTextSettings[ATriggerType];
   var
   LPreviousTextSettings := FTriggerTextSettings[Previous];
-  Text.TextSettings.BeginUpdate;
+  Text.DefaultTextSettings.BeginUpdate;
   try
-    Text.TextSettings := LCurrentTextSettings;
+    Text.DefaultTextSettings := LCurrentTextSettings;
     if not AApplyColor then
-      Text.TextSettings.FontColor := LPreviousTextSettings.FontColor;
+      Text.DefaultTextSettings.FontColor := LPreviousTextSettings.FontColor;
   finally
-    Text.TextSettings.EndUpdate;
+    Text.DefaultTextSettings.EndUpdate;
   end;
 end;
 
 procedure TZxTextSettingsButtonStyleObject.UpdateFontColor(const AValue: TAlphaColor);
 begin
-  Text.TextSettings.FontColor := AValue;
+  Text.DefaultTextSettings.FontColor := AValue;
   Redraw;
 end;
 
@@ -1016,6 +993,8 @@ end;
 
 procedure TZxTextSettingsButtonStyleObject.OnTextSettingsChanged(Sender: TObject);
 begin
+  if csLoading in ComponentState then
+    Exit;
   if Sender = FTriggerTextSettings[Current] then
     UpdateTextSettings(Current, True);
 end;
@@ -1118,7 +1097,6 @@ end;
 initialization
 
 RegisterFmxClasses([TZxColorActiveStyleObject, TZxAnimatedImageActiveStyleObject, TZxColorButtonStyleObject,
-  TZxCustomTextButtonStyleObject.TZxButtonStyleTextSettings, TZxTextSettingsButtonStyleObject,
-  TZxColorOverrideSvgGlyphButtonStyleObject]);
+  TZxTextSettingsButtonStyleObject, TZxColorOverrideSvgGlyphButtonStyleObject]);
 
 end.

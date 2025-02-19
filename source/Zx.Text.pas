@@ -68,6 +68,7 @@ type
   private
     FTextSettingsInfo: TSkTextSettingsInfo;
     FSavedTextSettings: TSkTextSettings;
+    FSavedStyledSettings: TStyledSettings;
     FStyleText: ISkStyleTextObject;
     FObjectState: IObjectState;
     FText: String;
@@ -80,6 +81,7 @@ type
     function GetResultingTextSettings: TSkTextSettings;
     function GetStyledSettings: TStyledSettings;
     function GetTextSettings: TSkTextSettings;
+    procedure SetDefaultTextSettings(const Value: TSkTextSettings);
     procedure SetStyledSettings(const AValue: TStyledSettings);
     procedure SetTextSettings(const AValue: TSkTextSettings);
     { ICaption }
@@ -105,6 +107,7 @@ type
     procedure DoAutoSize;
     property Paragraph: ISkParagraph read GetParagraph;
   protected
+    function CustomTextSettingsClass: TSkTextSettingsInfo.TCustomTextSettingsClass; virtual;
     function TextStored: Boolean; virtual;
     procedure TextSettingsChanged(Sender: TObject); virtual;
     function ConvertText(const Value: string): string; virtual;
@@ -134,6 +137,7 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure SetBounds(X, Y, AWidth, AHeight: Single); override;
+    property DefaultTextSettings: TSkTextSettings read GetDefaultTextSettings write SetDefaultTextSettings;
     property ResultingTextSettings: TSkTextSettings read GetResultingTextSettings;
     property ParagraphBounds: TRectF read GetParagraphBounds;
   published
@@ -218,7 +222,7 @@ constructor TZxText.Create(AOwner: TComponent);
 begin
   inherited;
   AutoTranslate := True;
-  FTextSettingsInfo := TSkTextSettingsInfo.Create(Self, nil);
+  FTextSettingsInfo := TSkTextSettingsInfo.Create(Self, CustomTextSettingsClass);
   FTextSettingsInfo.Design := True; // csDesigning in ComponentState;
   FTextSettingsInfo.OnChange := TextSettingsChanged;
   FPrefixStyle := TPrefixStyle.HidePrefix;
@@ -250,6 +254,11 @@ begin
     SetSize(Width, Height)
   else
     inherited;
+end;
+
+function TZxText.CustomTextSettingsClass: TSkTextSettingsInfo.TCustomTextSettingsClass;
+begin
+  Result := nil;
 end;
 
 function TZxText.ConvertText(const Value: string): string;
@@ -450,7 +459,6 @@ begin
       { from text }
       SetupDefaultTextSetting(LTextResource, FTextSettingsInfo.DefaultTextSettings);
       inherited;
-      ResultingTextSettings.Change;
     finally
       ResultingTextSettings.EndUpdate;
       FTextSettingsInfo.Design := True; // csDesigning in ComponentState;
@@ -535,7 +543,13 @@ begin
   Result := False;
   if (FSavedTextSettings <> nil) and (FTextSettingsInfo <> nil) then
   begin
-    TextSettings := FSavedTextSettings;
+    ResultingTextSettings.BeginUpdate;
+    try
+      StyledSettings := FSavedStyledSettings;
+      TextSettings := FSavedTextSettings;
+    finally
+      ResultingTextSettings.EndUpdate;
+    end;
     FreeAndNil(FSavedTextSettings);
     Result := True;
   end;
@@ -549,6 +563,7 @@ begin
     if FSavedTextSettings = nil then
       FSavedTextSettings := TSkTextSettings.Create(nil);
     FSavedTextSettings.Assign(FTextSettingsInfo.TextSettings);
+    FSavedStyledSettings := StyledSettings;
     Result := True;
   end;
 end;
@@ -841,6 +856,11 @@ end;
 procedure TZxText.SetData(const Value: TValue);
 begin
   Text := Value.ToString;
+end;
+
+procedure TZxText.SetDefaultTextSettings(const Value: TSkTextSettings);
+begin
+  FTextSettingsInfo.DefaultTextSettings := Value;
 end;
 
 procedure TZxText.SetName(const AValue: TComponentName);
