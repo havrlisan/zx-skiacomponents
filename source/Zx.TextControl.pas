@@ -158,7 +158,7 @@ begin
   FIsChanging := True;
   EnableExecuteAction := True;
   FTextSettingsInfo := TSkTextSettingsInfo.Create(Self, CustomTextSettingsClass);
-  FTextSettingsInfo.Design := True; // csDesigning in ComponentState;
+  FTextSettingsInfo.Design := csDesigning in ComponentState;
   FTextSettingsInfo.OnChange := TextSettingsChanged;
   FPrefixStyle := DefaultPrefixStyle;
   FAcceleratorKey := #0;

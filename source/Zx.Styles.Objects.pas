@@ -1001,6 +1001,7 @@ begin
   var
   LFontColor := InterpolateColor(LPreviousFontColor, LCurrentFontColor, TAnimation(Sender).NormalizedTime);
   Text.DefaultTextSettings.FontColor := LFontColor;
+  Text.Recreate;
 end;
 
 function TZxTextSettingsButtonStyleObject.GetTriggerTextSettings(const AIndex: TZxButtonTriggerType): TSkTextSettings;

@@ -137,6 +137,10 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure SetBounds(X, Y, AWidth, AHeight: Single); override;
+{$IF CompilerVersion > 36}
+{$MESSAGE WARN 'Check if FMX.Skia.TSkTextSettingsInfo.OnChange event fires on ResultingTextSettings change'}
+{$ENDIF}
+    procedure Recreate;
     property DefaultTextSettings: TSkTextSettings read GetDefaultTextSettings write SetDefaultTextSettings;
     property ResultingTextSettings: TSkTextSettings read GetResultingTextSettings;
     property ParagraphBounds: TRectF read GetParagraphBounds;
@@ -223,7 +227,7 @@ begin
   inherited;
   AutoTranslate := True;
   FTextSettingsInfo := TSkTextSettingsInfo.Create(Self, CustomTextSettingsClass);
-  FTextSettingsInfo.Design := True; // csDesigning in ComponentState;
+  FTextSettingsInfo.Design := csDesigning in ComponentState;
   FTextSettingsInfo.OnChange := TextSettingsChanged;
   FPrefixStyle := TPrefixStyle.HidePrefix;
 end;
@@ -536,6 +540,14 @@ begin
       FParagraphBounds := TRectF.Empty;
     end;
   end;
+end;
+
+procedure TZxText.Recreate;
+begin
+  DeleteParagraph;
+  NeedUpdateEffects;
+  DoAutoSize;
+  Redraw;
 end;
 
 function TZxText.RestoreState: Boolean;
