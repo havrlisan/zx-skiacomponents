@@ -301,7 +301,6 @@ type
     procedure OnTextSettingsChanged(Sender: TObject);
   strict protected
     procedure UpdateTextSettings(const ATriggerType: TZxButtonTriggerType; const AApplyColor: Boolean);
-    procedure UpdateFontColor(const AValue: TAlphaColor);
   strict protected
     procedure Loaded; override;
     procedure DoTriggered(const ATriggerType: TZxButtonTriggerType); override;
@@ -913,7 +912,7 @@ begin
   FText.Name := String.Empty;
   FText.Text := 'Text';
   FText.Align := TAlignLayout.Client;
-  FText.StyledSettings := [];
+  FText.StyledSettings := AllStyledSettings;
   FText.Parent := Self;
   FText.OnResized := OnTextResized;
 end;
@@ -979,12 +978,6 @@ begin
   end;
 end;
 
-procedure TZxTextSettingsButtonStyleObject.UpdateFontColor(const AValue: TAlphaColor);
-begin
-  Text.DefaultTextSettings.FontColor := AValue;
-  Redraw;
-end;
-
 procedure TZxTextSettingsButtonStyleObject.DoTriggered(const ATriggerType: TZxButtonTriggerType);
 begin
   inherited;
@@ -1007,7 +1000,7 @@ begin
   LCurrentFontColor := FTriggerTextSettings[Current].FontColor;
   var
   LFontColor := InterpolateColor(LPreviousFontColor, LCurrentFontColor, TAnimation(Sender).NormalizedTime);
-  UpdateFontColor(LFontColor);
+  Text.DefaultTextSettings.FontColor := LFontColor;
 end;
 
 function TZxTextSettingsButtonStyleObject.GetTriggerTextSettings(const AIndex: TZxButtonTriggerType): TSkTextSettings;

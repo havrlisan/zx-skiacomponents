@@ -320,7 +320,7 @@ var
         { set StyledSettings only if AObject supports IObjectState; otherwise it won't be able restore the previous value }
         if Assigned(FObjectState) then
           AITextSettings.StyledSettings := StyledSettings;
-        ADefaultTextSettings.Assign(AITextSettings.TextSettings);
+        ADefaultTextSettings.Assign(AITextSettings.DefaultTextSettings);
       end
       else
         ADefaultTextSettings.Assign(nil);
@@ -655,6 +655,8 @@ end;
 
 procedure TZxTextControl.TextSettingsChanged(Sender: TObject);
 begin
+  if csLoading in ComponentState then
+    Exit;
   ApplyStyleLookup;
   Change;
 end;
