@@ -409,6 +409,7 @@ var
 
   procedure SetupDefaultTextSetting(const AObject: TFmxObject; const ADefaultTextSettings: TSkTextSettings);
   var
+    LFMXTextSettings: ITextSettings;
     LNewFamily: string;
     LNewSize: Single;
   begin
@@ -420,8 +421,10 @@ var
     FStyleText := nil;
     if ADefaultTextSettings <> nil then
     begin
-      if (AObject <> nil) and Supports(AObject, ISkStyleTextObject, FStyleText) then
+      if Supports(AObject, ISkStyleTextObject, FStyleText) then
         ADefaultTextSettings.Assign(FStyleText.TextSettings)
+      else if Supports(AObject, ITextSettings, LFMXTextSettings) then
+        ADefaultTextSettings.Assign(LFMXTextSettings.TextSettings)
       else
         ADefaultTextSettings.Assign(nil);
 
@@ -733,6 +736,8 @@ var
     Result.HeightMultiplier := ResultingTextSettings.HeightMultiplier;
     Result.LetterSpacing := ResultingTextSettings.LetterSpacing;
     SetTextStyleDecorations(Result, ResultingTextSettings.Decorations, ADrawKind);
+    if GlobalSkiaTextLocale <> '' then
+      Result.Locale := GlobalSkiaTextLocale;
   end;
 
   function CreateParagraphStyle(const ADefaultTextStyle: ISkTextStyle): ISkParagraphStyle;

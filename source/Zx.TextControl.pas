@@ -304,6 +304,7 @@ var
   procedure SetupDefaultTextSetting(const AObject: TFmxObject; var AITextSettings: ISkTextSettings; var ATextObject: TControl;
     const ADefaultTextSettings: TSkTextSettings);
   var
+    LFMXTextSettings: ITextSettings;
     NewFamily: string;
     NewSize: Single;
   begin
@@ -315,12 +316,19 @@ var
     ATextObject := nil;
     if ADefaultTextSettings <> nil then
     begin
-      if (AObject <> nil) and Supports(AObject, ISkTextSettings, AITextSettings) then
+      if Supports(AObject, ISkTextSettings, AITextSettings) then
       begin
         { set StyledSettings only if AObject supports IObjectState; otherwise it won't be able restore the previous value }
         if Assigned(FObjectState) then
           AITextSettings.StyledSettings := StyledSettings;
         ADefaultTextSettings.Assign(AITextSettings.DefaultTextSettings);
+      end
+      else if Supports(AObject, ITextSettings, LFMXTextSettings) then
+      begin
+        { set StyledSettings only if AObject supports IObjectState; otherwise it won't be able restore the previous value }
+        if Assigned(FObjectState) then
+          AITextSettings.StyledSettings := StyledSettings;
+        ADefaultTextSettings.Assign(LFMXTextSettings.TextSettings);
       end
       else
         ADefaultTextSettings.Assign(nil);
