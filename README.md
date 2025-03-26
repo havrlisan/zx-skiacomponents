@@ -1,5 +1,5 @@
 <p align="center"><img src="Resources/Logo/ZX-dark.svg" alt="Logo" height="210" width="240" /></p>
-<p align="center"><a href="#compatibility"><img src="https://img.shields.io/static/v1?label=RAD%20Studio&message=11%2B&color=silver&style=flat&logo=delphi&logoColor=white" alt="Delphi 11+ support" /></a></p>
+<p align="center"><a href="#compatibility"><img src="https://img.shields.io/static/v1?label=RAD%20Studio&message=11%2B&color=silver&style=flat&logo=delphi&logoColor=white" alt="Delphi 12.3 support" /></a></p>
 
 An open-source set of Delphi components for the FireMonkey framework that utilizes the **[Skia4Delphi](https://skia4delphi.org)** library.
 
