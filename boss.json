@@ -1,0 +1,11 @@
+{
+	"name": "ZX Skia",
+	"description": "ZX Skia components",
+	"version": "1.0.0",
+	"homepage": "https://github.com/havrlisan/zx-skiacomponents",
+	"mainsrc": "./source",
+	"projects": [],
+	"dependencies": {
+		"devsource.activetickets.com/scm/at/activetickets-delphi-components": ">0.0.0"
+	}
+}
