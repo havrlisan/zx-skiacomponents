@@ -308,6 +308,7 @@ var
     NewFamily: string;
     NewSize: Single;
   begin
+    { StyledSettings is set below only if AObject supports IObjectState; otherwise it won't be able restore the previous value }
     if (AObject <> nil) and AObject.GetInterface(IObjectState, FObjectState) then
       FObjectState.SaveState
     else
@@ -318,16 +319,14 @@ var
     begin
       if Supports(AObject, ISkTextSettings, AITextSettings) then
       begin
-        { set StyledSettings only if AObject supports IObjectState; otherwise it won't be able restore the previous value }
         if Assigned(FObjectState) then
           AITextSettings.StyledSettings := StyledSettings;
         ADefaultTextSettings.Assign(AITextSettings.DefaultTextSettings);
       end
       else if Supports(AObject, ITextSettings, LFMXTextSettings) then
       begin
-        { set StyledSettings only if AObject supports IObjectState; otherwise it won't be able restore the previous value }
         if Assigned(FObjectState) then
-          AITextSettings.StyledSettings := StyledSettings;
+          LFMXTextSettings.StyledSettings := StyledSettings;
         ADefaultTextSettings.Assign(LFMXTextSettings.TextSettings);
       end
       else
