@@ -61,7 +61,6 @@ type
     FTextSettingsInfo: TSkTextSettingsInfo;
     FTextObject: TControl;
     FITextSettings: ISkTextSettings;
-    FObjectState: IObjectState;
     FText: string;
     FIsChanging: Boolean;
     FPrefixStyle: TPrefixStyle;
@@ -308,27 +307,14 @@ var
     NewFamily: string;
     NewSize: Single;
   begin
-    { StyledSettings is set below only if AObject supports IObjectState; otherwise it won't be able restore the previous value }
-    if (AObject <> nil) and AObject.GetInterface(IObjectState, FObjectState) then
-      FObjectState.SaveState
-    else
-      FObjectState := nil;
     AITextSettings := nil;
     ATextObject := nil;
     if ADefaultTextSettings <> nil then
     begin
       if Supports(AObject, ISkTextSettings, AITextSettings) then
-      begin
-        if Assigned(FObjectState) then
-          AITextSettings.StyledSettings := StyledSettings;
-        ADefaultTextSettings.Assign(AITextSettings.DefaultTextSettings);
-      end
+        ADefaultTextSettings.Assign(AITextSettings.TextSettings)
       else if Supports(AObject, ITextSettings, LFMXTextSettings) then
-      begin
-        if Assigned(FObjectState) then
-          LFMXTextSettings.StyledSettings := StyledSettings;
-        ADefaultTextSettings.Assign(LFMXTextSettings.TextSettings);
-      end
+        ADefaultTextSettings.Assign(LFMXTextSettings.TextSettings)
       else
         ADefaultTextSettings.Assign(nil);
 
@@ -389,12 +375,7 @@ begin
   if TPlatformServices.Current.SupportsPlatformService(IFMXAcceleratorKeyRegistryService, AccelKeyService) then
     AccelKeyService.UnregisterReceiver(Root, Self);
 
-  if FObjectState <> nil then
-  begin
-    FObjectState.RestoreState;
-    FObjectState := nil;
-  end
-  else if FITextSettings <> nil then
+  if FITextSettings <> nil then
     FITextSettings.TextSettings := FITextSettings.DefaultTextSettings;
   FITextSettings := nil;
   FTextObject := nil;
