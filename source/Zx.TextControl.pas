@@ -491,7 +491,7 @@ function TZxTextControl.GetFitHeight: Single;
   end;
 
 begin
-  Result := GetControlHeight(Self, False) + GetControlHeight(ResourceControl, True);
+  Result := Ceil(GetControlHeight(Self, False) + GetControlHeight(ResourceControl, True));
   if Result = 0 then
     Result := Height;
 end;
@@ -517,7 +517,7 @@ function TZxTextControl.GetFitWidth: Single;
   end;
 
 begin
-  Result := GetControlWidth(Self, False) + GetControlWidth(ResourceControl, True);
+  Result := Ceil(GetControlWidth(Self, False) + GetControlWidth(ResourceControl, True));
   if Result = 0 then
     Result := Width;
 end;
