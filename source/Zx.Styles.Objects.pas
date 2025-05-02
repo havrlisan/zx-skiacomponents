@@ -266,7 +266,7 @@ type
     property RadiusY: Single read FRadiusY write SetRadiusY stored RadiusYStored;
   end;
 
-  TZxCustomTextButtonStyleObject = class abstract(TZxCustomButtonStyleObject, ISkTextSettings, IObjectState, ICaption,
+  TZxCustomTextButtonStyleObject = class abstract(TZxCustomButtonStyleObject, IZxText, ISkTextSettings, IObjectState, ICaption,
     IZxPrefixStyle)
   protected type
     TZxButtonStyleText = class(TZxText)
@@ -284,7 +284,7 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
-    property Text: TZxText read FText implements ISkTextSettings, IObjectState, ICaption, IZxPrefixStyle;
+    property Text: TZxText read FText implements IZxText, ISkTextSettings, IObjectState, ICaption, IZxPrefixStyle;
   end;
 
   /// <summary>
