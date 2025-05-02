@@ -480,8 +480,8 @@ function TZxTextControl.GetFitHeight: Single;
       if LControl.Visible then
         if AUseTextFitBounds and (LControl is TSkLabel) then
           Result := Result + LControl.Margins.Top + TSkLabel(LControl).FitBounds.Height + LControl.Margins.Bottom
-        else if AUseTextFitBounds and (LControl is TZxText) then
-          Result := Result + LControl.Margins.Top + TZxText(LControl).ParagraphBounds.Height + LControl.Margins.Bottom
+        else if AUseTextFitBounds and Supports(LControl, IZxText) then
+          Result := Result + LControl.Margins.Top + (LControl as IZxText).ParagraphBounds.Height + LControl.Margins.Bottom
         else if not(LControl.Align in [TAlignLayout.Client, TAlignLayout.Contents, TAlignLayout.Left, TAlignLayout.MostLeft,
           TAlignLayout.Right, TAlignLayout.MostRight, TAlignLayout.FitLeft, TAlignLayout.FitRight, TAlignLayout.HorzCenter,
           TAlignLayout.Vertical]) then
@@ -507,8 +507,8 @@ function TZxTextControl.GetFitWidth: Single;
       if LControl.Visible then
         if AUseTextFitBounds and (LControl is TSkLabel) then
           Result := Result + LControl.Margins.Left + TSkLabel(LControl).FitBounds.Width + LControl.Margins.Right
-        else if AUseTextFitBounds and (LControl is TZxText) then
-          Result := Result + LControl.Margins.Left + TZxText(LControl).ParagraphBounds.Width + LControl.Margins.Right
+        else if AUseTextFitBounds and Supports(LControl, IZxText) then
+          Result := Result + LControl.Margins.Left + (LControl as IZxText).ParagraphBounds.Width + LControl.Margins.Right
         else if not(LControl.Align in [TAlignLayout.Client, TAlignLayout.Contents, TAlignLayout.Top, TAlignLayout.MostTop,
           TAlignLayout.Bottom, TAlignLayout.MostBottom, TAlignLayout.VertCenter, TAlignLayout.Horizontal]) then
           Result := Result + LControl.Margins.Left + LControl.Width + LControl.Margins.Right;
