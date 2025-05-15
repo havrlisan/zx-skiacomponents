@@ -9,7 +9,7 @@
         <Projects Include="Zx.SkiaComponents.Design.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="..\..\Examples\FullDemo\Projects\RAD Studio 12.2 Athens\FullDemo.dproj">
+        <Projects Include="..\Examples\FullDemo\Packages\FullDemo.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -39,13 +39,13 @@
         <MSBuild Projects="Zx.SkiaComponents.Design.dproj" Targets="Make"/>
     </Target>
     <Target Name="FullDemo">
-        <MSBuild Projects="..\..\Examples\FullDemo\Projects\RAD Studio 12.2 Athens\FullDemo.dproj"/>
+        <MSBuild Projects="..\Examples\FullDemo\Packages\FullDemo.dproj"/>
     </Target>
     <Target Name="FullDemo:Clean">
-        <MSBuild Projects="..\..\Examples\FullDemo\Projects\RAD Studio 12.2 Athens\FullDemo.dproj" Targets="Clean"/>
+        <MSBuild Projects="..\Examples\FullDemo\Packages\FullDemo.dproj" Targets="Clean"/>
     </Target>
     <Target Name="FullDemo:Make">
-        <MSBuild Projects="..\..\Examples\FullDemo\Projects\RAD Studio 12.2 Athens\FullDemo.dproj" Targets="Make"/>
+        <MSBuild Projects="..\Examples\FullDemo\Packages\FullDemo.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
         <CallTarget Targets="Zx_SkiaComponents;Zx_SkiaComponents_Design;FullDemo"/>

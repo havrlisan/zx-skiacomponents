@@ -34,9 +34,15 @@ uses
   Zx.Controls;
 
 type
+  IZxText = interface
+    ['{01E418E5-7EB2-4604-9F41-89E904B845A3}']
+    function GetParagraphBounds: TRectF;
+    function FillTextFlags: TFillTextFlags;
+    property ParagraphBounds: TRectF read GetParagraphBounds;
+  end;
 
   [ComponentPlatformsAttribute(SkSupportedPlatformsMask)]
-  TZxText = class(TZxStyledControl, ISkTextSettings, IObjectState, ICaption, IZxPrefixStyle)
+  TZxText = class(TZxStyledControl, IZxText, ISkTextSettings, IObjectState, ICaption, IZxPrefixStyle)
     // protected type
     // TAcceleratorInfo = class
     // private
@@ -409,6 +415,7 @@ var
 
   procedure SetupDefaultTextSetting(const AObject: TFmxObject; const ADefaultTextSettings: TSkTextSettings);
   var
+    LFMXTextSettings: ITextSettings;
     LNewFamily: string;
     LNewSize: Single;
   begin
@@ -420,8 +427,10 @@ var
     FStyleText := nil;
     if ADefaultTextSettings <> nil then
     begin
-      if (AObject <> nil) and Supports(AObject, ISkStyleTextObject, FStyleText) then
+      if Supports(AObject, ISkStyleTextObject, FStyleText) then
         ADefaultTextSettings.Assign(FStyleText.TextSettings)
+      else if Supports(AObject, ITextSettings, LFMXTextSettings) then
+        ADefaultTextSettings.Assign(LFMXTextSettings.TextSettings)
       else
         ADefaultTextSettings.Assign(nil);
 
@@ -733,6 +742,8 @@ var
     Result.HeightMultiplier := ResultingTextSettings.HeightMultiplier;
     Result.LetterSpacing := ResultingTextSettings.LetterSpacing;
     SetTextStyleDecorations(Result, ResultingTextSettings.Decorations, ADrawKind);
+    if GlobalSkiaTextLocale <> '' then
+      Result.Locale := GlobalSkiaTextLocale;
   end;
 
   function CreateParagraphStyle(const ADefaultTextStyle: ISkTextStyle): ISkParagraphStyle;

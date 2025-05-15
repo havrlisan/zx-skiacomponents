@@ -8,7 +8,7 @@
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <ProjectGuid>{276ADA7C-FE92-4F3D-A07A-DBCA58A93FA5}</ProjectGuid>
         <ProjectName Condition="'$(ProjectName)'==''">Zx.SkiaComponents.Design</ProjectName>
-        <ProjectVersion>20.2</ProjectVersion>
+        <ProjectVersion>20.3</ProjectVersion>
         <TargetedPlatforms>1</TargetedPlatforms>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
@@ -81,13 +81,13 @@
         <DCCReference Include="Skia.Package.FMX.Designtime.dcp"/>
         <DCCReference Include="dclfmxstd.dcp"/>
         <DCCReference Include="fmx.dcp"/>
-        <DCCReference Include="..\..\source\Zx.Designtime.pas"/>
-        <DCCReference Include="..\..\source\Zx.Designtime.SvgBrushList.pas">
+        <DCCReference Include="..\source\Zx.Designtime.pas"/>
+        <DCCReference Include="..\source\Zx.Designtime.SvgBrushList.pas">
             <Form>ZxSvgBrushListEditorForm</Form>
             <FormType>fmx</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
-        <DCCReference Include="..\..\source\Zx.Designtime.AnimatedImageSourceList.pas">
+        <DCCReference Include="..\source\Zx.Designtime.AnimatedImageSourceList.pas">
             <Form>ZxAnimatedImageSourceListEditorForm</Form>
             <FormType>fmx</FormType>
         </DCCReference>

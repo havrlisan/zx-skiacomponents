@@ -5,10 +5,10 @@
         <Config Condition="'$(Config)'==''">Debug</Config>
         <FrameworkType>None</FrameworkType>
         <MainSource>Zx.SkiaComponents.dpk</MainSource>
-        <Platform Condition="'$(Platform)'==''">Win32</Platform>
+        <Platform Condition="'$(Platform)'==''">Win64</Platform>
         <ProjectGuid>{A5F2146F-2A3A-4D2A-81DC-CFA9581F4E52}</ProjectGuid>
         <ProjectName Condition="'$(ProjectName)'==''">Zx.SkiaComponents</ProjectName>
-        <ProjectVersion>20.2</ProjectVersion>
+        <ProjectVersion>20.3</ProjectVersion>
         <TargetedPlatforms>3</TargetedPlatforms>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
@@ -91,58 +91,58 @@
         <DCCReference Include="Skia.Package.RTL.dcp"/>
         <DCCReference Include="fmx.dcp"/>
         <DCCReference Include="Skia.Package.FMX.dcp"/>
-        <DCCReference Include="..\..\source\Zx.Helpers.pas"/>
-        <DCCReference Include="..\..\source\Zx.Ani.pas"/>
-        <DCCReference Include="..\..\source\Zx.SvgBrushList.pas"/>
-        <DCCReference Include="..\..\source\Zx.TextControl.pas"/>
-        <DCCReference Include="..\..\source\Zx.Text.pas"/>
-        <DCCReference Include="..\..\source\Zx.Buttons.pas"/>
-        <DCCReference Include="..\..\source\Zx.Styles.Objects.pas"/>
-        <DCCReference Include="..\..\source\Zx.StyleManager.pas"/>
-        <DCCReference Include="..\..\source\Zx.Styles.pas">
+        <DCCReference Include="..\source\Zx.Helpers.pas"/>
+        <DCCReference Include="..\source\Zx.Ani.pas"/>
+        <DCCReference Include="..\source\Zx.SvgBrushList.pas"/>
+        <DCCReference Include="..\source\Zx.TextControl.pas"/>
+        <DCCReference Include="..\source\Zx.Text.pas"/>
+        <DCCReference Include="..\source\Zx.Buttons.pas"/>
+        <DCCReference Include="..\source\Zx.Styles.Objects.pas"/>
+        <DCCReference Include="..\source\Zx.StyleManager.pas"/>
+        <DCCReference Include="..\source\Zx.Styles.pas">
             <Form>ZxStyles</Form>
             <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
-        <DCCReference Include="..\..\source\Zx.Controls.pas"/>
-        <DCCReference Include="..\..\source\Zx.AnimatedImageSourceList.pas"/>
-        <RcItem Include="..\..\Resources\Images\TZxText.bmp">
+        <DCCReference Include="..\source\Zx.Controls.pas"/>
+        <DCCReference Include="..\source\Zx.AnimatedImageSourceList.pas"/>
+        <RcItem Include="..\Resources\Images\TZxText.bmp">
             <ResourceType>BITMAP</ResourceType>
             <ResourceId>TZxText</ResourceId>
         </RcItem>
-        <RcItem Include="..\..\Resources\Images\TZxSvgBrushList.bmp">
+        <RcItem Include="..\Resources\Images\TZxSvgBrushList.bmp">
             <ResourceType>BITMAP</ResourceType>
             <ResourceId>TZxSvgBrushList</ResourceId>
         </RcItem>
-        <RcItem Include="..\..\Resources\Images\TZxSvgGlyph.bmp">
+        <RcItem Include="..\Resources\Images\TZxSvgGlyph.bmp">
             <ResourceType>BITMAP</ResourceType>
             <ResourceId>TZxSvgGlyph</ResourceId>
         </RcItem>
-        <RcItem Include="..\..\Resources\Images\TZxButton.bmp">
+        <RcItem Include="..\Resources\Images\TZxButton.bmp">
             <ResourceType>BITMAP</ResourceType>
             <ResourceId>TZxButton</ResourceId>
         </RcItem>
-        <RcItem Include="..\..\Resources\Images\TZxSpeedButton.bmp">
+        <RcItem Include="..\Resources\Images\TZxSpeedButton.bmp">
             <ResourceType>BITMAP</ResourceType>
             <ResourceId>TZxSpeedButton</ResourceId>
         </RcItem>
-        <RcItem Include="..\..\Resources\Images\TZxAnimatedImageActiveStyleObject.bmp">
+        <RcItem Include="..\Resources\Images\TZxAnimatedImageActiveStyleObject.bmp">
             <ResourceType>BITMAP</ResourceType>
             <ResourceId>TZxAnimatedImageActiveStyleObject</ResourceId>
         </RcItem>
-        <RcItem Include="..\..\Resources\Images\TZxColorActiveStyleObject.bmp">
+        <RcItem Include="..\Resources\Images\TZxColorActiveStyleObject.bmp">
             <ResourceType>BITMAP</ResourceType>
             <ResourceId>TZxColorActiveStyleObject</ResourceId>
         </RcItem>
-        <RcItem Include="..\..\Resources\Images\TZxColorButtonStyleObject.bmp">
+        <RcItem Include="..\Resources\Images\TZxColorButtonStyleObject.bmp">
             <ResourceType>BITMAP</ResourceType>
             <ResourceId>TZxColorButtonStyleObject</ResourceId>
         </RcItem>
-        <RcItem Include="..\..\Resources\Images\TZxCustomStyleObject.bmp">
+        <RcItem Include="..\Resources\Images\TZxCustomStyleObject.bmp">
             <ResourceType>BITMAP</ResourceType>
             <ResourceId>TZxCustomStyleObject</ResourceId>
         </RcItem>
-        <RcItem Include="..\..\Resources\Images\TZxAnimatedImageSourceList.bmp">
+        <RcItem Include="..\Resources\Images\TZxAnimatedImageSourceList.bmp">
             <ResourceType>BITMAP</ResourceType>
             <ResourceId>TZxAnimatedImageSourceList</ResourceId>
         </RcItem>
@@ -168,6 +168,87 @@
                 </Source>
                 <Excluded_Packages/>
             </Delphi.Personality>
+            <Deployment Version="5">
+                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\23.0\Bpl\Win64\Zx.SkiaComponents.bpl" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win64">
+                        <RemoteName>Zx.SkiaComponents.bpl</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\23.0\Bpl\Win64\Zx.SkiaComponents.rsm" Configuration="Debug" Class="DebugSymbols">
+                    <Platform Name="Win64">
+                        <RemoteName>Zx.SkiaComponents.rsm</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployClass Name="AdditionalDebugSymbols">
+                    <Platform Name="Win32">
+                        <Operation>0</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="DebugSymbols">
+                    <Platform Name="Win32">
+                        <Operation>0</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="DependencyFramework">
+                    <Platform Name="Win32">
+                        <Operation>0</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="DependencyModule">
+                    <Platform Name="Win32">
+                        <Operation>0</Operation>
+                        <Extensions>.dll;.bpl</Extensions>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Required="true" Name="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Operation>0</Operation>
+                        <Extensions>.bpl</Extensions>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="File">
+                    <Platform Name="Win32">
+                        <Operation>0</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Required="true" Name="ProjectOutput">
+                    <Platform Name="Win32">
+                        <Operation>0</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="ProjectUWPManifest">
+                    <Platform Name="Win32">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="Win64">
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="UWP_DelphiLogo150">
+                    <Platform Name="Win32">
+                        <RemoteDir>Assets</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="Win64">
+                        <RemoteDir>Assets</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="UWP_DelphiLogo44">
+                    <Platform Name="Win32">
+                        <RemoteDir>Assets</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="Win64">
+                        <RemoteDir>Assets</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <ProjectRoot Platform="Win32" Name="$(PROJECTNAME)"/>
+                <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
+            </Deployment>
             <Platforms>
                 <Platform value="Android">False</Platform>
                 <Platform value="Android64">False</Platform>

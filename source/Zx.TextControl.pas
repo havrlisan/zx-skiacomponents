@@ -61,7 +61,6 @@ type
     FTextSettingsInfo: TSkTextSettingsInfo;
     FTextObject: TControl;
     FITextSettings: ISkTextSettings;
-    FObjectState: IObjectState;
     FText: string;
     FIsChanging: Boolean;
     FPrefixStyle: TPrefixStyle;
@@ -304,24 +303,18 @@ var
   procedure SetupDefaultTextSetting(const AObject: TFmxObject; var AITextSettings: ISkTextSettings; var ATextObject: TControl;
     const ADefaultTextSettings: TSkTextSettings);
   var
+    LFMXTextSettings: ITextSettings;
     NewFamily: string;
     NewSize: Single;
   begin
-    if (AObject <> nil) and AObject.GetInterface(IObjectState, FObjectState) then
-      FObjectState.SaveState
-    else
-      FObjectState := nil;
     AITextSettings := nil;
     ATextObject := nil;
     if ADefaultTextSettings <> nil then
     begin
-      if (AObject <> nil) and Supports(AObject, ISkTextSettings, AITextSettings) then
-      begin
-        { set StyledSettings only if AObject supports IObjectState; otherwise it won't be able restore the previous value }
-        if Assigned(FObjectState) then
-          AITextSettings.StyledSettings := StyledSettings;
-        ADefaultTextSettings.Assign(AITextSettings.DefaultTextSettings);
-      end
+      if Supports(AObject, ISkTextSettings, AITextSettings) then
+        ADefaultTextSettings.Assign(AITextSettings.TextSettings)
+      else if Supports(AObject, ITextSettings, LFMXTextSettings) then
+        ADefaultTextSettings.Assign(LFMXTextSettings.TextSettings)
       else
         ADefaultTextSettings.Assign(nil);
 
@@ -382,12 +375,7 @@ begin
   if TPlatformServices.Current.SupportsPlatformService(IFMXAcceleratorKeyRegistryService, AccelKeyService) then
     AccelKeyService.UnregisterReceiver(Root, Self);
 
-  if FObjectState <> nil then
-  begin
-    FObjectState.RestoreState;
-    FObjectState := nil;
-  end
-  else if FITextSettings <> nil then
+  if FITextSettings <> nil then
     FITextSettings.TextSettings := FITextSettings.DefaultTextSettings;
   FITextSettings := nil;
   FTextObject := nil;
@@ -473,8 +461,8 @@ function TZxTextControl.GetFitHeight: Single;
       if LControl.Visible then
         if AUseTextFitBounds and (LControl is TSkLabel) then
           Result := Result + LControl.Margins.Top + TSkLabel(LControl).FitBounds.Height + LControl.Margins.Bottom
-        else if AUseTextFitBounds and (LControl is TZxText) then
-          Result := Result + LControl.Margins.Top + TZxText(LControl).ParagraphBounds.Height + LControl.Margins.Bottom
+        else if AUseTextFitBounds and Supports(LControl, IZxText) then
+          Result := Result + LControl.Margins.Top + (LControl as IZxText).ParagraphBounds.Height + LControl.Margins.Bottom
         else if not(LControl.Align in [TAlignLayout.Client, TAlignLayout.Contents, TAlignLayout.Left, TAlignLayout.MostLeft,
           TAlignLayout.Right, TAlignLayout.MostRight, TAlignLayout.FitLeft, TAlignLayout.FitRight, TAlignLayout.HorzCenter,
           TAlignLayout.Vertical]) then
@@ -484,7 +472,7 @@ function TZxTextControl.GetFitHeight: Single;
   end;
 
 begin
-  Result := GetControlHeight(Self, False) + GetControlHeight(ResourceControl, True);
+  Result := Ceil(GetControlHeight(Self, False) + GetControlHeight(ResourceControl, True));
   if Result = 0 then
     Result := Height;
 end;
@@ -500,8 +488,8 @@ function TZxTextControl.GetFitWidth: Single;
       if LControl.Visible then
         if AUseTextFitBounds and (LControl is TSkLabel) then
           Result := Result + LControl.Margins.Left + TSkLabel(LControl).FitBounds.Width + LControl.Margins.Right
-        else if AUseTextFitBounds and (LControl is TZxText) then
-          Result := Result + LControl.Margins.Left + TZxText(LControl).ParagraphBounds.Width + LControl.Margins.Right
+        else if AUseTextFitBounds and Supports(LControl, IZxText) then
+          Result := Result + LControl.Margins.Left + (LControl as IZxText).ParagraphBounds.Width + LControl.Margins.Right
         else if not(LControl.Align in [TAlignLayout.Client, TAlignLayout.Contents, TAlignLayout.Top, TAlignLayout.MostTop,
           TAlignLayout.Bottom, TAlignLayout.MostBottom, TAlignLayout.VertCenter, TAlignLayout.Horizontal]) then
           Result := Result + LControl.Margins.Left + LControl.Width + LControl.Margins.Right;
@@ -510,7 +498,7 @@ function TZxTextControl.GetFitWidth: Single;
   end;
 
 begin
-  Result := GetControlWidth(Self, False) + GetControlWidth(ResourceControl, True);
+  Result := Ceil(GetControlWidth(Self, False) + GetControlWidth(ResourceControl, True));
   if Result = 0 then
     Result := Width;
 end;
