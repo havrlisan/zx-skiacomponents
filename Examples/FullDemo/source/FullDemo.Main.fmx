@@ -85,17 +85,15 @@ object frmFullDemo: TfrmFullDemo
       object btnGlyph: TZxButton
         Align = Left
         AutoSize = True
+        AutoSizeMinWidth = 80.000000000000000000
         Images = sblExamples
         ImageIndex = 2
         Margins.Bottom = 20.000000000000000000
-        Size.Width = 111.089996337890600000
+        Size.Width = 112.000000000000000000
         Size.Height = 40.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 0
         Text = 'Click me'
-        TextSettings.HorzAlign = Center
-        TextSettings.MaxLines = 1
-        TextSettings.Trimming = None
         OnClick = btnGlyphClick
       end
       object layButtonExample2: TLayout
@@ -114,9 +112,7 @@ object frmFullDemo: TfrmFullDemo
           Size.Height = 61.000000000000000000
           Size.PlatformDefault = False
           Text = 'A button can also be multiline!'
-          TextSettings.HorzAlign = Center
           TextSettings.MaxLines = 10
-          TextSettings.Trimming = None
           OnClick = btnMultilineClick
         end
       end
@@ -181,9 +177,7 @@ object frmFullDemo: TfrmFullDemo
         StyleLookup = 'button.mouseover'
         TabOrder = 1
         Text = 'Colored trigger (MouseOver)'
-        TextSettings.HorzAlign = Center
         TextSettings.MaxLines = 2
-        TextSettings.Trimming = None
       end
       object btnButtonStyle: TZxButton
         Align = HorzCenter
@@ -195,9 +189,6 @@ object frmFullDemo: TfrmFullDemo
         StyleLookup = 'button.example'
         TabOrder = 0
         Text = 'Full button triggers'
-        TextSettings.HorzAlign = Center
-        TextSettings.MaxLines = 1
-        TextSettings.Trimming = None
       end
     end
     object txtButtonsActionCompatible: TZxText
@@ -237,9 +228,7 @@ object frmFullDemo: TfrmFullDemo
         StyleLookup = 'button.animated'
         TabOrder = 1
         Text = 'Animated trigger (MouseOver)'
-        TextSettings.HorzAlign = Center
         TextSettings.MaxLines = 2
-        TextSettings.Trimming = None
       end
       object btnAniLoopTrigger: TZxButton
         Align = HorzCenter
@@ -251,9 +240,6 @@ object frmFullDemo: TfrmFullDemo
         StyleLookup = 'button.animated.loop'
         TabOrder = 0
         Text = 'AniLoop trigger'
-        TextSettings.HorzAlign = Center
-        TextSettings.MaxLines = 1
-        TextSettings.Trimming = None
       end
     end
     object layStylesExample3: TLayout
@@ -276,9 +262,7 @@ object frmFullDemo: TfrmFullDemo
         StyleLookup = 'button.textsettings'
         TabOrder = 1
         Text = 'Animated text settings'
-        TextSettings.HorzAlign = Center
         TextSettings.MaxLines = 2
-        TextSettings.Trimming = None
       end
       object btnCombined: TZxButton
         Align = HorzCenter
@@ -290,9 +274,7 @@ object frmFullDemo: TfrmFullDemo
         StyleLookup = 'button.combined'
         TabOrder = 0
         Text = 'Animations can be combined!'
-        TextSettings.HorzAlign = Center
         TextSettings.MaxLines = 2
-        TextSettings.Trimming = None
       end
     end
     object layStylesExample4: TLayout
@@ -315,9 +297,7 @@ object frmFullDemo: TfrmFullDemo
         Size.PlatformDefault = False
         StyleLookup = 'button.icon'
         TabOrder = 0
-        TextSettings.HorzAlign = Center
         TextSettings.MaxLines = 2
-        TextSettings.Trimming = None
       end
       object lblButtonAsIcon: TZxText
         Align = Left

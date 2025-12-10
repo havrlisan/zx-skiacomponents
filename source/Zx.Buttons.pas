@@ -141,6 +141,8 @@ type
     property Align default TAlignLayout.None;
     property Anchors;
     property AutoSize default False;
+    property AutoSizeMinWidth;
+    property AutoSizeMinHeight;
     property AutoTranslate default True;
     property Cancel: Boolean read FCancel write FCancel default False;
     property CanFocus default True;
@@ -244,6 +246,8 @@ type
     property Align default TAlignLayout.None;
     property Anchors;
     property AutoSize default False;
+    property AutoSizeMinWidth;
+    property AutoSizeMinHeight;
     property AutoTranslate default True;
     property CanFocus default False;
     property CanParentFocus;

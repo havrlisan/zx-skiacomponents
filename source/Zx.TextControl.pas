@@ -67,7 +67,11 @@ type
     FAcceleratorKey: Char;
     FAcceleratorKeyIndex: Integer;
     FAutoSize: Boolean;
+    FAutoSizeMinWidth: Single;
+    FAutoSizeMinHeight: Single;
     procedure SetAutoSize(const AValue: Boolean);
+    procedure SetAutoSizeMinWidth(const AValue: Single);
+    procedure SetAutoSizeMinHeight(const AValue: Single);
     { ISkTextSettings }
     function GetDefaultTextSettings: TSkTextSettings;
     function GetResultingTextSettings: TSkTextSettings;
@@ -129,6 +133,8 @@ type
 
     procedure Change;
     property AutoSize: Boolean read FAutoSize write SetAutoSize;
+    property AutoSizeMinWidth: Single read FAutoSizeMinWidth write SetAutoSizeMinWidth;
+    property AutoSizeMinHeight: Single read FAutoSizeMinHeight write SetAutoSizeMinHeight;
     property Text: string read GetText write SetText stored TextStored;
     property PrefixStyle: TPrefixStyle read GetPrefixStyle write SetPrefixStyle default DefaultPrefixStyle;
     property DefaultTextSettings: TSkTextSettings read GetDefaultTextSettings;
@@ -475,6 +481,8 @@ begin
   Result := Ceil(GetControlHeight(Self, False) + GetControlHeight(ResourceControl, True));
   if Result = 0 then
     Result := Height;
+  if FAutoSizeMinHeight > Result then
+    Result := FAutoSizeMinHeight;
 end;
 
 function TZxTextControl.GetFitWidth: Single;
@@ -501,6 +509,8 @@ begin
   Result := Ceil(GetControlWidth(Self, False) + GetControlWidth(ResourceControl, True));
   if Result = 0 then
     Result := Width;
+  if FAutoSizeMinWidth > Result then
+    Result := FAutoSizeMinWidth;
 end;
 
 function TZxTextControl.GetPrefixStyle: TPrefixStyle;
@@ -555,6 +565,24 @@ begin
   if FAutoSize <> AValue then
   begin
     FAutoSize := AValue;
+    SetSize(Width, Height);
+  end;
+end;
+
+procedure TZxTextControl.SetAutoSizeMinWidth(const AValue: Single);
+begin
+  if FAutoSizeMinWidth <> AValue then
+  begin
+    FAutoSizeMinWidth := AValue;
+    SetSize(Width, Height);
+  end;
+end;
+
+procedure TZxTextControl.SetAutoSizeMinHeight(const AValue: Single);
+begin
+  if FAutoSizeMinHeight <> AValue then
+  begin
+    FAutoSizeMinHeight := AValue;
     SetSize(Width, Height);
   end;
 end;
