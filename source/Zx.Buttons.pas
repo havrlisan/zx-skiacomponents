@@ -419,8 +419,7 @@ begin
     FGlyph.ImageIndex := FImageLink.ImageIndex;
   end;
   StyleObject := nil;
-  if FindStyleResource<TFmxObject>('icon', StyleObject) and Supports(StyleObject, ITintedObject) or
-    FindStyleResource<TFmxObject>('glyphstyle', StyleObject) and Supports(StyleObject, ITintedObject) then
+  if FindStyleResource<TFmxObject>('icon', StyleObject) and Supports(StyleObject, ITintedObject) then
   begin
     FIconTintObject := StyleObject as ITintedObject;
     FIconTintObject.TintColor := FIconTintColor;
