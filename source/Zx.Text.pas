@@ -2,7 +2,7 @@
 { *                                                                        * }
 { *                           Zx-SkiaComponents                            * }
 { *                                                                        * }
-{ *           Copyright (c) 2025 Zx-SkiaComponents Project.                * }
+{ *           Copyright (c) 2026 Zx-SkiaComponents Project.                * }
 { *                                                                        * }
 { * Use of this source code is governed by the MIT license that can be     * }
 { * found in the LICENSE file.                                             * }
@@ -143,7 +143,7 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure SetBounds(X, Y, AWidth, AHeight: Single); override;
-{$IF CompilerVersion > 36}
+{$IF CompilerVersion > 37}
 {$MESSAGE WARN 'Check if FMX.Skia.TSkTextSettingsInfo.OnChange event fires on ResultingTextSettings change'}
 {$ENDIF}
     procedure Recreate;

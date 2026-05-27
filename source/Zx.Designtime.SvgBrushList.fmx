@@ -49,7 +49,6 @@ object ZxSvgBrushListEditorForm: TZxSvgBrushListEditorForm
       Size.PlatformDefault = False
       StyleLookup = 'buttonstyle'
       Text = 'Add'
-      TextSettings.Trimming = None
       OnClick = btnAddClick
     end
     object btnEdit: TSpeedButton
@@ -62,7 +61,6 @@ object ZxSvgBrushListEditorForm: TZxSvgBrushListEditorForm
       Size.PlatformDefault = False
       StyleLookup = 'buttonstyle'
       Text = 'Edit'
-      TextSettings.Trimming = None
       OnClick = btnEditClick
     end
     object btnClear: TSpeedButton
@@ -75,7 +73,6 @@ object ZxSvgBrushListEditorForm: TZxSvgBrushListEditorForm
       Size.PlatformDefault = False
       StyleLookup = 'buttonstyle'
       Text = 'Clear'
-      TextSettings.Trimming = None
       OnClick = btnClearClick
     end
     object btnCancel: TSpeedButton
@@ -89,7 +86,6 @@ object ZxSvgBrushListEditorForm: TZxSvgBrushListEditorForm
       Size.PlatformDefault = False
       StyleLookup = 'buttonstyle'
       Text = 'Cancel'
-      TextSettings.Trimming = None
     end
     object btnSave: TSpeedButton
       Align = Top
@@ -102,7 +98,6 @@ object ZxSvgBrushListEditorForm: TZxSvgBrushListEditorForm
       Size.PlatformDefault = False
       StyleLookup = 'buttonstyle'
       Text = 'Save changes'
-      TextSettings.Trimming = None
     end
     object btnRemove: TSpeedButton
       Align = Top
@@ -115,7 +110,6 @@ object ZxSvgBrushListEditorForm: TZxSvgBrushListEditorForm
       Size.PlatformDefault = False
       StyleLookup = 'buttonstyle'
       Text = 'Remove'
-      TextSettings.Trimming = None
       OnClick = btnRemoveClick
     end
     object edItemName: TEdit

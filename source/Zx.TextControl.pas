@@ -2,7 +2,7 @@
 { *                                                                        * }
 { *                           Zx-SkiaComponents                            * }
 { *                                                                        * }
-{ *           Copyright (c) 2025 Zx-SkiaComponents Project.                * }
+{ *           Copyright (c) 2026 Zx-SkiaComponents Project.                * }
 { *                                                                        * }
 { * Use of this source code is governed by the MIT license that can be     * }
 { * found in the LICENSE file.                                             * }
@@ -10,7 +10,7 @@
 { ************************************************************************** }
 unit Zx.TextControl;
 
-{$IF CompilerVersion > 36}
+{$IF CompilerVersion > 37}
 {$MESSAGE WARN 'Check changes in FMX.Controls TTextControl implementation'}
 {$ENDIF}
 
@@ -224,12 +224,7 @@ begin
   try
     if FITextSettings <> nil then
       FITextSettings.TextSettings.Assign(ResultingTextSettings);
-    if FPrefixStyle = TPrefixStyle.HidePrefix then
-      TextStr := DelAmp(Text)
-    else
-      TextStr := Text;
-
-    TextStr := DoFilterControlText(TextStr);
+    TextStr := DoFilterControlText(Text);
 
     if FTextObject <> nil then
       UpdateTextObject(FTextObject, TextStr)

@@ -2,7 +2,7 @@
 { *                                                                        * }
 { *                           Zx-SkiaComponents                            * }
 { *                                                                        * }
-{ *           Copyright (c) 2025 Zx-SkiaComponents Project.                * }
+{ *           Copyright (c) 2026 Zx-SkiaComponents Project.                * }
 { *                                                                        * }
 { * Use of this source code is governed by the MIT license that can be     * }
 { * found in the LICENSE file.                                             * }
@@ -28,7 +28,7 @@ uses
 type
   TSkLabelHelper = class helper for TSkLabel
   public
-{$IF CompilerVersion > 36}
+{$IF CompilerVersion > 37}
 {$MESSAGE WARN 'Check if issue was fixed'}
     { https://github.com/skia4delphi/skia4delphi/issues/250 }
 {$ENDIF}

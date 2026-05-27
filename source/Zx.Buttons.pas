@@ -2,7 +2,7 @@
 { *                                                                        * }
 { *                           Zx-SkiaComponents                            * }
 { *                                                                        * }
-{ *           Copyright (c) 2025 Zx-SkiaComponents Project.                * }
+{ *           Copyright (c) 2026 Zx-SkiaComponents Project.                * }
 { *                                                                        * }
 { * Use of this source code is governed by the MIT license that can be     * }
 { * found in the LICENSE file.                                             * }
@@ -10,7 +10,7 @@
 { ************************************************************************** }
 unit Zx.Buttons;
 
-{$IF CompilerVersion > 36}
+{$IF CompilerVersion > 37}
 {$MESSAGE WARN 'Check changes in FMX.StdCtrls TCustomButton, TButton, TSpeedButton implementation'}
 {$ENDIF}
 
@@ -419,7 +419,8 @@ begin
     FGlyph.ImageIndex := FImageLink.ImageIndex;
   end;
   StyleObject := nil;
-  if FindStyleResource<TFmxObject>('icon', StyleObject) and Supports(StyleObject, ITintedObject) then
+  if FindStyleResource<TFmxObject>('icon', StyleObject) and Supports(StyleObject, ITintedObject) or
+    FindStyleResource<TFmxObject>('glyphstyle', StyleObject) and Supports(StyleObject, ITintedObject) then
   begin
     FIconTintObject := StyleObject as ITintedObject;
     FIconTintObject.TintColor := FIconTintColor;
