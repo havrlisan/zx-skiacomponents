@@ -101,6 +101,7 @@
         <DCCReference Include="..\source\Zx.Text.pas"/>
         <DCCReference Include="..\source\Zx.Buttons.pas"/>
         <DCCReference Include="..\source\Zx.Styles.Objects.pas"/>
+        <DCCReference Include="..\source\Zx.StyleBook.pas"/>
         <DCCReference Include="..\source\Zx.StyleManager.pas"/>
         <DCCReference Include="..\source\Zx.Styles.pas">
             <Form>ZxStyles</Form>

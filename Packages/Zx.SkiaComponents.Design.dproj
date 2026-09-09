@@ -74,6 +74,7 @@
         <DCCReference Include="Zx.SkiaComponents.dcp"/>
         <DCCReference Include="Skia.Package.FMX.Designtime.dcp"/>
         <DCCReference Include="dclfmxstd.dcp"/>
+        <DCCReference Include="designide.dcp"/>
         <DCCReference Include="fmx.dcp"/>
         <DCCReference Include="..\source\Zx.Designtime.pas"/>
         <DCCReference Include="..\source\Zx.Designtime.SvgBrushList.pas">

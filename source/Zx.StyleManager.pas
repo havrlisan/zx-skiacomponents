@@ -32,6 +32,7 @@ uses
   Zx.AnimatedImageSourceList,
   Zx.Buttons,
   Zx.Styles.Objects,
+  Zx.StyleBook,
   Zx.SvgBrushList,
   Zx.Text;
 
@@ -131,12 +132,19 @@ begin
   LDataModule := ADataModuleClass.Create(nil);
   try
     for var LComponent in LDataModule do
+    begin
+      var LContainer: TStyleContainer := nil;
       if LComponent is TStyleBook then
+        LContainer := TStyleBook(LComponent).Style as TStyleContainer
+      else if LComponent is TZxStyleBook then
+        LContainer := TZxStyleBook(LComponent).GetStyleContainer;
+      if LContainer <> nil then
       begin
         var
-        LStyles := InternalAddStyles(TStyleBook(LComponent).Style as TStyleContainer, LTarget, False);
+        LStyles := InternalAddStyles(LContainer, LTarget, False);
         AStylesHolder.AddStyles(LStyles);
       end;
+    end;
   finally
     LDataModule.Free;
   end;
